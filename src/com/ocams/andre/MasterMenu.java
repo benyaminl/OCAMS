@@ -1,4 +1,4 @@
-package com.ocams;
+package com.ocams.andre;
 import javax.swing.table.DefaultTableModel;
 public class MasterMenu extends javax.swing.JFrame {
     public MasterMenu() {
