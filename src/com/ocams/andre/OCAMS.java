@@ -8,8 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 public class OCAMS {
     public static void main(String[] args) {
-        new MasterMenu().setVisible(true);
-        new MasterJurnal().setVisible(true);
+        //new MasterMenu().setVisible(true);
+        //new MasterJurnal().setVisible(true);
         new MasterReferensi().setVisible(true);
     }
     public static Connection setKoneksi() {

@@ -19,6 +19,7 @@ public class FrameLoginUser extends javax.swing.JFrame {
      */
     public FrameLoginUser() {
         initComponents();
+        OCAMS.SQL.setPanel(this);
     }
 
     @SuppressWarnings("unchecked")

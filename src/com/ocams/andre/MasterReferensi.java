@@ -5,24 +5,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import com.ocams.OCAMS;
+import java.util.ArrayList;
 public class MasterReferensi extends javax.swing.JFrame {
     public MasterReferensi() {
         initComponents();
+        OCAMS.SQL.setPanel(this);
     }
     public static void selectData() {
         String kolom[] = {"Nomor","Nama"}; //kolom untuk jTable yang ada di form
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
         String SQL = "SELECT * FROM noref";
-        ResultSet rs = OCAMS.executeQuery(SQL);
-        try {
-            while(rs.next()) {
-                String nomor = rs.getString(1);
-                String nama = rs.getString(2);
-                String data[] = {nomor,nama};
-                dtm.addRow(data);
-            }
-        }catch (SQLException ex) {
-            Logger.getLogger(MasterReferensi.class.getName()).log(Level.SEVERE, null, ex);
+        ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray(SQL);
+        for(String[] d: data){
+            dtm.addRow(d);
         }
         jTable2.setModel(dtm);
     }
@@ -153,7 +149,7 @@ public class MasterReferensi extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowActivated
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         String SQL = "INSERT INTO `noref`(`Nomor`, `Nama`) VALUES (" + Integer.parseInt(jTextField1.getText()) + ",'" + String.valueOf(jTextField2.getText()) + "')";
-        int status = OCAMS.execute(SQL);
+        int status = OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
             selectData();
@@ -163,7 +159,7 @@ public class MasterReferensi extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1MouseClicked
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
        String SQL = "UPDATE noref SET nama='" + String.valueOf(jTextField2.getText()) + "' WHERE nomor=" + Integer.parseInt(jTextField1.getText());
-        int status = OCAMS.execute(SQL);
+        int status = OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil diperbaharui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
             selectData();
@@ -173,7 +169,7 @@ public class MasterReferensi extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2MouseClicked
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         String SQL = "DELETE FROM noref WHERE nomor=" + Integer.parseInt(jTextField1.getText());
-        int status = OCAMS.execute(SQL);
+        int status = OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
             selectData();

@@ -82,7 +82,7 @@ public class SQLcommand {
             while (rs.next()) {
                 String temp = "";
                 int i = 1;
-                for(i=1; i<= rs.getMetaData().getColumnCount()-2;i++){
+                for(i=1; i<= rs.getMetaData().getColumnCount()-1;i++){
                     temp += rs.getObject(i).toString() + ",";
                 }
                 temp += rs.getObject(i).toString();
