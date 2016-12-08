@@ -1,10 +1,12 @@
 package com.ocams.abed;
 
+import com.ocams.OCAMS;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -88,28 +90,17 @@ public class FrameLoginUser extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ArrayList<String> pass = new ArrayList<String>();
-        
-        String SQL = "SELECT Password FROM data_user where ID_User = '" + txtUserID.getText().toUpperCase() + "'";
-        Koneksi db = new Koneksi();
-        ResultSet rs = db.executeQuery(SQL);
-        
-        try {
-            while(rs.next()) {  //selama sebnayak rs utk memasukn data                
-                String password = rs.getString(1);
-                pass.add(password);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(FrameLoginUser.class.getName()).log(Level.SEVERE, null, ex);
+        if(OCAMS.SQL.cekLogin(txtUserID.getText(), txtPassword.getText())){
+            JOptionPane.showMessageDialog(rootPane, "Berhasil Login!", "Berhasil Login!"
+                    , JOptionPane.INFORMATION_MESSAGE);
         }
-        
-        for (int i = 0; i < pass.size(); i++) {
-            if (txtPassword.getText().equalsIgnoreCase(pass.get(i))) {
-                new FrameMasterUser().setVisible(true);
-            }   
+        else{
+            JOptionPane.showMessageDialog(rootPane, "Gagal Login! Cek user dan Password anda!", "Gagal Login!"
+                    , JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
