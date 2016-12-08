@@ -4,13 +4,7 @@ package com.ocams.benyamin;
 // berfungsi penuh dan memiliki keterkaitan dengan segala hal yang berhubungan 
 // dengan ini
 public class Transaksi {
-    private String id, jenis, operator;
-
-    public Transaksi(String id, String jenis, String operator) {
-        this.id = id;
-        this.jenis = jenis;
-        this.operator = operator;
-    }
+    private String id, tanggal, operator;
 
     public String getId() {
         return id;
@@ -20,12 +14,12 @@ public class Transaksi {
         this.id = id;
     }
 
-    public String getJenis() {
-        return jenis;
+    public String getTanggal() {
+        return tanggal;
     }
 
-    public void setJenis(String jenis) {
-        this.jenis = jenis;
+    public void setTanggal(String tanggal) {
+        this.tanggal = tanggal;
     }
 
     public String getOperator() {
