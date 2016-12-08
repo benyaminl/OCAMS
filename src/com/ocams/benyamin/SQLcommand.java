@@ -1,6 +1,4 @@
 package com.ocams.benyamin;
-// SQL Command adalah untuk melakukan 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,15 +6,34 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 
+/**
+ * SQL Class untuk berinteraksi dengan DB mysql menggunakan prepared Statement
+ * @author Ben
+ */
 public class SQLcommand {
     javax.swing.JFrame panel;
     private String user,password,db;
     final String server;
+    
+    /**
+     * Inisiasi Class SQL ini sendiri
+     * @param form Form yang dipakai dalam SQL jadi biar bisa nampilkan JOptionPane
+     * @param user Username DB mysql-nya
+     * @param password Password DB mysql-nya
+     * @param db Nama Databasenya 
+     * @param server Nama Server DB berada
+     */
+
     public SQLcommand(javax.swing.JFrame form,String user,String password,String db, String server){
         panel = form;
         this.user = user; this.password = password; this.db = db; this.server = server;
+        this.conn();
     }
     
+    /**
+     * Function untuk Inisialisasi Koneksi
+     * @Return Connection
+    */
     private Connection conn() {
         String server = this.server; String db = this.db;
         String user = this.user; String pass = this.password;
@@ -32,6 +49,12 @@ public class SQLcommand {
         return koneksi;
     }
     
+    /**
+     * Function Execute Non Query - Prepared Statemend
+     * @param sql SQL Query dalam String
+     * @return Integer
+     */
+
     public int executeNonQuery(String sql){
         int status;
         try {
@@ -46,6 +69,11 @@ public class SQLcommand {
         }
     }
     
+    /**
+     * Function untuk melakukan Query dengan return sebuah ArrayList String[]
+     * @param sql
+     * @return
+     */
     public ResultSet executeQuery(String sql){
         ResultSet rs = null;
         try {
