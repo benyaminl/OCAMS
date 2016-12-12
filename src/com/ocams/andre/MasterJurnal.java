@@ -1,4 +1,5 @@
 package com.ocams.andre;
+
 import javax.swing.table.DefaultTableModel;
 public class MasterJurnal extends javax.swing.JFrame {
     public MasterJurnal() {
