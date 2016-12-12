@@ -1,9 +1,22 @@
 package com.ocams.andre;
-
+import static com.ocams.andre.MasterReferensi.selectData;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 public class MasterJurnal extends javax.swing.JFrame {
     public MasterJurnal() {
         initComponents();
+        //com.ocams.OCAMS.SQL.setPanel(this);
+    }
+    public static void selectData() {
+        String kolom[] = {"Kode","Perkiraan","No. Ref","Debit","Kredit"}; //kolom untuk jTable yang ada di form
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "SELECT * FROM jurnal";
+        ArrayList<String[]> data = com.ocams.andre.OCAMS.SQL.executeQueryGetArray(SQL);
+        for(String[] d: data){
+            dtm.addRow(d);
+        }
+        jTable2.setModel(dtm);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -36,6 +49,11 @@ public class MasterJurnal extends javax.swing.JFrame {
         jTextField4 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jLabel1.setText("Kode:");
 
@@ -46,12 +64,6 @@ public class MasterJurnal extends javax.swing.JFrame {
         jLabel4.setText("Posisi:");
 
         jLabel5.setText("Harga:");
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setText("Debit");
@@ -91,7 +103,7 @@ public class MasterJurnal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Kode", "Perkiraan", "No. Ref.", "Posisi", "Harga"
+                "Kode", "Perkiraan", "No. Ref.", "Debit", "Kredit"
             }
         ));
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -187,58 +199,80 @@ public class MasterJurnal extends javax.swing.JFrame {
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         String kode = jTextField1.getText();
         String perkiraan = jTextField2.getText();
-        String noref = jTextField3.getText();
-        String posisi = "";
+        int noref = Integer.parseInt(jTextField3.getText());
+        int debit = 0;
+        int kredit = 0;
         if (jRadioButton1.isSelected() == true){
-            posisi = "Debit";
+            debit = Integer.parseInt(jTextField4.getText());
+            kredit = 0;
         }else if (jRadioButton2.isSelected() == true){
-            posisi = "Kredit";
+            debit = 0;
+            kredit = Integer.parseInt(jTextField4.getText());
         }
-        String harga = jTextField4.getText();
-        Object[] row = {kode,perkiraan,noref,posisi,harga};
-        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-        model.addRow(row);
+        String SQL = "INSERT INTO `jurnal`(`Kode`, `Perkiraan`, `NoRef`, `Debit`, `Kredit`) VALUES ('" + kode + "','" + perkiraan + "'," + noref + "," + debit + "," + kredit + ")";
+        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
+        if (status == 1) {
+            JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            selectData();
+        }else {
+            JOptionPane.showMessageDialog(this, "Data gagal ditambahkan!", "Gagal", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton2MouseClicked
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         int baris = jTable2.rowAtPoint(evt.getPoint());
         String kode = jTextField1.getText();
         String perkiraan = jTextField2.getText();
-        String noref = jTextField3.getText();
-        String posisi = "";
+        int noref = Integer.parseInt(jTextField3.getText());
+        int debit = 0;
+        int kredit = 0;
         if (jRadioButton1.isSelected() == true){
-            posisi = "Debit";
+            debit = Integer.parseInt(jTextField4.getText());
+            kredit = 0;
         }else if (jRadioButton2.isSelected() == true){
-            posisi = "Kredit";
+            debit = 0;
+            kredit = Integer.parseInt(jTextField4.getText());
         }
-        String harga = jTextField4.getText();
-        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-        model.setValueAt(kode, baris, 0);
-        model.setValueAt(perkiraan, baris, 1);
-        model.setValueAt(noref, baris, 2);
-        model.setValueAt(posisi, baris, 3);
-        model.setValueAt(harga, baris, 4);
+        String SQL = "UPDATE jurnal SET perkiraan='" + perkiraan + "',noref=" + noref + ",debit=" + debit + ",kredit=" + kredit + " WHERE kode='" + kode + "'";
+        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
+        if (status == 1) {
+            JOptionPane.showMessageDialog(this, "Data berhasil diperbaharui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            selectData();
+        }else {
+            JOptionPane.showMessageDialog(this, "Data gagal diperbaharui!", "Gagal", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton3MouseClicked
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
-        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-        model.removeRow(jTable2.rowAtPoint(evt.getPoint()));
+        String SQL = "DELETE FROM jurnal WHERE kode='" + String.valueOf(jTextField1.getText());
+        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
+        if (status == 1) {
+            JOptionPane.showMessageDialog(this, "Data berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            selectData();
+        }else {
+            JOptionPane.showMessageDialog(this, "Data gagal dihapus!", "Gagal", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton4MouseClicked
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
         int baris = jTable2.rowAtPoint(evt.getPoint());
-        jTextField1.setText(String.valueOf(jTable2.getValueAt(baris, 0)));
-        jTextField2.setText(String.valueOf(jTable2.getValueAt(baris, 1)));
-        jTextField3.setText(String.valueOf(jTable2.getValueAt(baris,2)));
-        String posisi = String.valueOf(jTable2.getValueAt(baris, 3));
-        if ("debit".equalsIgnoreCase(posisi)){
-            jRadioButton1.setSelected(true);
-        }else if ("kredit".equalsIgnoreCase(posisi)){
-            jRadioButton2.setSelected(true);
+        int debit;
+        int kredit;
+        if (baris != -1) {
+            jTextField1.setText(String.valueOf(jTable2.getValueAt(baris, 0)));
+            jTextField2.setText(String.valueOf(jTable2.getValueAt(baris, 1)));
+            jTextField3.setText(String.valueOf(jTable2.getValueAt(baris, 2)));
+            debit = Integer.parseInt(String.valueOf(jTable2.getValueAt(baris, 3)));
+            kredit = Integer.parseInt(String.valueOf(jTable2.getValueAt(baris, 4)));
+            if (debit > kredit){
+                jRadioButton1.setSelected(true);
+                jTextField4.setText(String.valueOf(debit));
+            }else if (debit < kredit){
+                jRadioButton2.setSelected(true);
+                jTextField4.setText(String.valueOf(kredit));
+            }
         }
-        jTextField4.setText(String.valueOf(jTable2.getValueAt(baris, 4)));
     }//GEN-LAST:event_jTable2MouseClicked
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        selectData();
+    }//GEN-LAST:event_formWindowActivated
     /**
      * @param args the command line arguments
      */
@@ -288,7 +322,7 @@ public class MasterJurnal extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
+    private static javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
