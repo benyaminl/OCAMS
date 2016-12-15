@@ -1,6 +1,5 @@
 package com.ocams.andre;
 import com.mysql.jdbc.Connection;
-import static com.ocams.OCAMS.SQL;
 import com.ocams.abed.User;
 import com.ocams.benyamin.SQLcommand;
 import java.sql.DriverManager;
@@ -13,11 +12,12 @@ public class OCAMS {
     public static SQLcommand SQL;
     public static User userYangLogin;
     public static void main(String[] args) {
-        String user = "root", pass = "", db = "ocams", server = "localhost";
+        String user = "root", pass = "", db = "ref", server = "localhost";
         SQL = new SQLcommand(user, pass, db, server);
         //new MasterMenu().setVisible(true);
         //new MasterJurnal().setVisible(true);
-        new MasterReferensi().setVisible(true);
+        //new MasterReferensi().setVisible(true);
+        new MasterTransaksi().setVisible(true);
     }
     public static Connection setKoneksi() {
         String konString = "jdbc:mysql://localhost:3306/ref";
