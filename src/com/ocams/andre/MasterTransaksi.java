@@ -3,11 +3,12 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 public class MasterTransaksi extends javax.swing.JFrame {
+    public static String kodetrans;
     public MasterTransaksi() {
         initComponents();
     }
     public static void selectData() {
-        String kolom[] = {"Kode","Nama","Jumlah","Total"}; //kolom untuk jTable yang ada di form
+        String kolom[] = {"Kode","Tanggal","Waktu","Total"}; //kolom untuk jTable yang ada di form
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
         String SQL = "SELECT * FROM htrans";
         ArrayList<String[]> data = com.ocams.andre.OCAMS.SQL.executeQueryGetArray(SQL);
@@ -66,6 +67,11 @@ public class MasterTransaksi extends javax.swing.JFrame {
                 "Kode", "Tanggal", "Waktu", "Total"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Insert");
@@ -76,6 +82,11 @@ public class MasterTransaksi extends javax.swing.JFrame {
         });
 
         jButton2.setText("Update");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
 
         jLabel7.setText("NamaUser");
         jLabel7.setToolTipText("");
@@ -166,28 +177,18 @@ public class MasterTransaksi extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        String SQL = "INSERT INTO `htrans`(`kode`, `tanggal`, `waktu`, `total`) VALUES ('" + String.valueOf(jTextField1.getText()) + "','" + String.valueOf(jTextField2.getText()) + "','" + String.valueOf(jTextField3.getText()) + "','" + String.valueOf(jTextField4.getText()) + "')";
-        int status = com.ocams.OCAMS.SQL.executeNonQuery(SQL);
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        String SQL = "INSERT INTO `htrans`(`kode`, `tanggal`, `waktu`, `total`) VALUES ('" + String.valueOf(jTextField1.getText()) + "','" + String.valueOf(jTextField2.getText()) + "','" + String.valueOf(jTextField3.getText()) + "'," + Integer.parseInt(jTextField4.getText()) + ")";
+        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
             selectData();
         }else {
             JOptionPane.showMessageDialog(this, "Data gagal ditambahkan!", "Gagal", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_formWindowActivated
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        String SQL = "UPDATE transaksi SET total=" + Integer.parseInt(jTextField4.getText()) + " WHERE kode='" + String.valueOf(jTextField1.getText()) + "'";
-        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
-        if (status == 1) {
-            JOptionPane.showMessageDialog(this, "Data berhasil diperbaharui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-            selectData();
-        }else {
-            JOptionPane.showMessageDialog(this, "Data gagal diperbaharui!", "Gagal", JOptionPane.WARNING_MESSAGE);
-        }
     }//GEN-LAST:event_jButton1MouseClicked
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-        String SQL = "DELETE FROM transaksi WHERE kode='" + Integer.parseInt(jTextField1.getText()) + "'";
+        String SQL = "DELETE FROM htrans WHERE kode='" + String.valueOf(jTextField1.getText()) + "'";
         int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -196,6 +197,29 @@ public class MasterTransaksi extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Data gagal dihapus!", "Gagal", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton3MouseClicked
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        String SQL = "UPDATE htrans SET total=" + Integer.parseInt(jTextField4.getText()) + " WHERE kode='" + String.valueOf(jTextField1.getText()) + "'";
+        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
+        if (status == 1) {
+            JOptionPane.showMessageDialog(this, "Data berhasil diperbaharui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            selectData();
+        }else {
+            JOptionPane.showMessageDialog(this, "Data gagal diperbaharui!", "Gagal", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton2MouseClicked
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        int baris = jTable1.getSelectedRow();
+         if (baris != -1) {
+            jTextField1.setText(jTable1.getValueAt(baris, 0).toString());
+            jTextField2.setText(jTable1.getValueAt(baris, 1).toString());
+            jTextField3.setText(jTable1.getValueAt(baris, 2).toString());
+            jTextField4.setText(jTable1.getValueAt(baris, 3).toString());
+            kodetrans = jTable1.getValueAt(baris, 0).toString();
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        selectData();
+    }//GEN-LAST:event_formWindowActivated
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
