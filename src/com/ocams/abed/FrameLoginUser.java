@@ -1,6 +1,7 @@
 package com.ocams.abed;
 
 import com.ocams.OCAMS;
+import com.ocams.benyamin.FormKasir;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -98,6 +99,8 @@ public class FrameLoginUser extends javax.swing.JFrame {
         if(OCAMS.SQL.cekLogin(txtUserID.getText(), txtPassword.getText())){
             JOptionPane.showMessageDialog(rootPane, "Berhasil Login!", "Berhasil Login!"
                     , JOptionPane.INFORMATION_MESSAGE);
+            setVisible(false);
+            new FormKasir().setVisible(true);
         }
         else{
             JOptionPane.showMessageDialog(rootPane, "Gagal Login! Cek user dan Password anda!", "Gagal Login!"
