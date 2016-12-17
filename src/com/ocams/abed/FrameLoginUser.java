@@ -100,6 +100,27 @@ public class FrameLoginUser extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Berhasil Login!", "Berhasil Login!"
                     , JOptionPane.INFORMATION_MESSAGE);
             setVisible(false);
+            String posisi = txtUserID.getText().substring(0, 2);
+            String data[] = OCAMS.SQL.executeQueryGetArray(
+                    "SELECT * FROM USER WHERE ID_user = '" + txtUserID.getText() + "'").get(0);
+            switch (posisi) {
+                case "AD":
+                    OCAMS.userYangLogin = new UAdmin(data[0], data[1], data[2], 
+                            data[3], data[4], data[5], data[0]);
+                    break;
+                case "MA":
+                    OCAMS.userYangLogin = new UManager(data[0], data[1], data[2], 
+                            data[3], data[4], data[5], data[0]);
+                    break;
+                case "KA":
+                    OCAMS.userYangLogin = new UKasir(data[0], data[1], data[2], 
+                            data[3], data[4], data[5], data[0]);
+                    break;
+                case "ST":
+                    OCAMS.userYangLogin = new UStock(data[0], data[1], data[2], 
+                            data[3], data[4], data[5], data[0]);
+                    break;
+            }
             new FormKasir().setVisible(true);
         }
         else{

@@ -6,8 +6,14 @@
 package com.ocams.benyamin;
 
 import com.ocams.OCAMS;
+import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -25,7 +31,8 @@ public class FormKasir extends javax.swing.JFrame {
         initComponents();
         String judul[] = {"Kode Menu","Nama Menu","Harga","Jumlah","Total"};
         table = new DefaultTableModel(null, judul);
-        lblTgl.setText(OCAMS.SQL.executeGetScalar("SELECT DATE_FORMAT(CURRENT_DATE,'%d-%m-%y')")); 
+        String tanggal = new SimpleDateFormat("dd-mm-yyyy").format(LocalDate.now());
+        lblTgl.setText(tanggal); 
         GView.setModel(table);
         ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray("SELECT nama_menu from menu");
         cbMenu = new DefaultComboBoxModel<>();
@@ -33,6 +40,7 @@ public class FormKasir extends javax.swing.JFrame {
         for(String[] d: data){
             cbMenu.addElement(d[0]);
         }
+        // KodeTrans,KodeMenu,Jumlah,HargaSatuan
     }
 
     /**
@@ -60,7 +68,7 @@ public class FormKasir extends javax.swing.JFrame {
         spJumlah = new javax.swing.JSpinner();
         jLabel10 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        txtMejaNo = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -181,7 +189,7 @@ public class FormKasir extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtMejaNo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(36, 36, 36)
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -203,7 +211,7 @@ public class FormKasir extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addComponent(jLabel5)
                         .addComponent(jLabel8)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtMejaNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel7)
@@ -264,10 +272,35 @@ public class FormKasir extends javax.swing.JFrame {
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         // Masukan di Header
+        //ID_Jual, Tgl Jual, Jam, Operator,ID_TRANS
         
-        OCAMS.SQL.executeNonQuery("INSERT INTO htrans_penjualan VALUES('','','','','')");
-        
+        String kode = "";
+        do {
+            kode = randomID();
+        } while (Integer.parseInt(OCAMS.SQL.executeGetScalar(
+                "SELECT COUNT(*) FROM HEADER_JUAL WHERE ID_JUAL = '" + randomID() + "'")) > 0);
+        String waktu = String.valueOf(LocalTime.now().getHour()) + String.valueOf(LocalTime.now().getMinute());
+        OCAMS.SQL.executeNonQuery("INSERT INTO htrans_penjualan VALUES('"+kode+"','"+LocalDate.now()
+                +"','"+waktu+"','"+OCAMS.userYangLogin.getKdUser()+"',0,"+txtMejaNo.getText()+")");
+        for (int i = 0; i < table.getRowCount(); i++) {
+            String values = "'"+kode + "','" + // Kode Trans
+                    table.getValueAt(i, 0).toString() + "'," + // Kode Makanan
+                    table.getValueAt(i, 2).toString();
+            OCAMS.SQL.executeNonQuery("INSERT INTO DTRANS VALUES("+values+")");
+        }
+        JOptionPane.showMessageDialog(this, "Transaksi Berhasil!");
     }//GEN-LAST:event_jButton3MouseClicked
+    
+    public String randomID(){
+        String temp = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        String hasil = "";
+        char charArray[] = temp.toCharArray();
+        for (int i = 0; i < 10; i++) {
+            Random random = new SecureRandom();
+            hasil += String.valueOf(charArray[random.nextInt(charArray.length)]);
+        }
+        return hasil;
+    }
     
     private void updateTotal(){
         int total = 0;
@@ -333,9 +366,9 @@ public class FormKasir extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblSubTotal;
     private javax.swing.JLabel lblTgl;
     private javax.swing.JSpinner spJumlah;
+    private javax.swing.JTextField txtMejaNo;
     // End of variables declaration//GEN-END:variables
 }
