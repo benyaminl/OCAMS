@@ -12,7 +12,7 @@ package com.ocams.abed;
 public class UKasir extends User{
     
     public UKasir(String kdUser, String Nama, String Alamat, String Notlp, String Email, String Password, String SQL) {
-        super(kdUser, Nama, Alamat, Notlp, Email, Password, SQL);
+        super(kdUser, Nama, Alamat, Notlp, Email, Password, SQL);        
     }
     
 }
