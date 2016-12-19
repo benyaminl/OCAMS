@@ -5,7 +5,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import com.ocams.OCAMS;
 import java.util.ArrayList;
 public class MasterReferensi extends javax.swing.JFrame {
     public MasterReferensi() {
