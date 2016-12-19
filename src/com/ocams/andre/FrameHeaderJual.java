@@ -5,17 +5,21 @@
  */
 package com.ocams.andre;
 
+import javax.swing.table.DefaultTableModel;
+
+
 /**
  *
  * @author Ben
  */
 public class FrameHeaderJual extends javax.swing.JFrame {
-
+    DefaultTableModel table;
     /**
      * Creates new form FrameHeaderJual
      */
     public FrameHeaderJual() {
         initComponents();
+        
     }
 
     /**

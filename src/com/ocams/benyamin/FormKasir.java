@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ocams.benyamin;
 
 import com.ocams.OCAMS;
@@ -11,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -29,9 +25,25 @@ public class FormKasir extends javax.swing.JFrame {
      */
     public FormKasir() {
         initComponents();
+        String kode = "";
+        do {
+            kode = randomID();
+        } while (Integer.parseInt(OCAMS.SQL.executeGetScalar(
+                "SELECT COUNT(*) FROM HEADER_JUAL WHERE ID_TRANS = '" + randomID() + "'")) > 0);
+        start(kode);
+    }
+    
+    public FormKasir(String kode){
+        initComponents();
+        start(kode);
+    }
+    
+    public void start(String kode){
+        lblTransaksi.setText(kode);
+        lblUser.setText(OCAMS.userYangLogin.getNama());
         String judul[] = {"Kode Menu","Nama Menu","Harga","Jumlah","Total"};
         table = new DefaultTableModel(null, judul);
-        String tanggal = new SimpleDateFormat("dd-mm-yyyy").format(LocalDate.now());
+        String tanggal = new SimpleDateFormat("dd-mm-yyyy").format(new Date());
         lblTgl.setText(tanggal); 
         GView.setModel(table);
         ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray("SELECT nama_menu from menu");
@@ -40,7 +52,6 @@ public class FormKasir extends javax.swing.JFrame {
         for(String[] d: data){
             cbMenu.addElement(d[0]);
         }
-        // KodeTrans,KodeMenu,Jumlah,HargaSatuan
     }
 
     /**
@@ -55,7 +66,7 @@ public class FormKasir extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         lblTgl = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        lblUser = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         cbMenuList = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
@@ -73,7 +84,7 @@ public class FormKasir extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        lblTransaksi = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -83,7 +94,7 @@ public class FormKasir extends javax.swing.JFrame {
 
         jLabel3.setText("Menu");
 
-        jLabel4.setText("Nama User");
+        lblUser.setText("Nama User");
 
         jLabel5.setText("User");
 
@@ -146,7 +157,7 @@ public class FormKasir extends javax.swing.JFrame {
 
         jLabel2.setText("ID Trans");
 
-        jLabel7.setText("jLabel2");
+        lblTransaksi.setText("jLabel2");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -179,7 +190,7 @@ public class FormKasir extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7)
+                                .addComponent(lblTransaksi)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel1)
                                 .addGap(2, 2, 2)
@@ -193,7 +204,7 @@ public class FormKasir extends javax.swing.JFrame {
                                 .addGap(36, 36, 36)
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4))
+                                .addComponent(lblUser))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jButton6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -208,13 +219,13 @@ public class FormKasir extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
+                        .addComponent(lblUser)
                         .addComponent(jLabel5)
                         .addComponent(jLabel8)
                         .addComponent(txtMejaNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel7)
+                        .addComponent(lblTransaksi)
                         .addComponent(jLabel1)
                         .addComponent(lblTgl)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -256,7 +267,16 @@ public class FormKasir extends javax.swing.JFrame {
         int total = jumlah * harga;
         String data[] = {kode,cbMenu.getSelectedItem().toString(),String.valueOf(harga),
             String.valueOf(jumlah),String.valueOf(total)};
-        table.addRow(data);
+        boolean check = true;
+        for (int i = 0; i < table.getRowCount(); i++) {
+            if(table.getValueAt(i, 0).toString().trim().equals(kode)) {
+                table.setValueAt(Integer.parseInt(table.getValueAt(i, 3).toString())+1, i, 3);
+                table.setValueAt(Integer.parseInt(table.getValueAt(i, 2).toString()) 
+                        * Integer.parseInt(table.getValueAt(i, 3).toString()), i, 4);
+                check = false;
+            }
+        }
+        if(check || table.getRowCount() <=0) table.addRow(data);
         updateTotal();
     }//GEN-LAST:event_jButton1MouseClicked
 
@@ -271,22 +291,14 @@ public class FormKasir extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6MouseClicked
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-        // Masukan di Header
-        //ID_Jual, Tgl Jual, Jam, Operator,ID_TRANS
-        
-        String kode = "";
-        do {
-            kode = randomID();
-        } while (Integer.parseInt(OCAMS.SQL.executeGetScalar(
-                "SELECT COUNT(*) FROM HEADER_JUAL WHERE ID_JUAL = '" + randomID() + "'")) > 0);
         String waktu = String.valueOf(LocalTime.now().getHour()) + String.valueOf(LocalTime.now().getMinute());
-        OCAMS.SQL.executeNonQuery("INSERT INTO htrans_penjualan VALUES('"+kode+"','"+LocalDate.now()
+        OCAMS.SQL.executeNonQuery("INSERT INTO header_jual VALUES('"+lblTransaksi.getText()+"','"+LocalDate.now()
                 +"','"+waktu+"','"+OCAMS.userYangLogin.getKdUser()+"',0,"+txtMejaNo.getText()+")");
         for (int i = 0; i < table.getRowCount(); i++) {
-            String values = "'"+kode + "','" + // Kode Trans
+            String values = "'"+lblTransaksi.getText() + "','" + // Kode Trans
                     table.getValueAt(i, 0).toString() + "'," + // Kode Makanan
-                    table.getValueAt(i, 2).toString();
-            OCAMS.SQL.executeNonQuery("INSERT INTO DTRANS VALUES("+values+")");
+                    table.getValueAt(i, 3).toString();
+            OCAMS.SQL.executeNonQuery("INSERT INTO detail_jual VALUES("+values+")");
         }
         JOptionPane.showMessageDialog(this, "Transaksi Berhasil!");
     }//GEN-LAST:event_jButton3MouseClicked
@@ -360,14 +372,14 @@ public class FormKasir extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblSubTotal;
     private javax.swing.JLabel lblTgl;
+    private javax.swing.JLabel lblTransaksi;
+    private javax.swing.JLabel lblUser;
     private javax.swing.JSpinner spJumlah;
     private javax.swing.JTextField txtMejaNo;
     // End of variables declaration//GEN-END:variables
