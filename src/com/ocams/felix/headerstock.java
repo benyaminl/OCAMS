@@ -5,6 +5,8 @@
  */
 package com.ocams.felix;
 
+import com.oracle.webservices.internal.api.databinding.DatabindingMode;
+
 /**
  *
  * @author Gp62
@@ -16,6 +18,8 @@ public class headerstock extends javax.swing.JFrame {
      */
     public headerstock() {
         initComponents();
+        
+        
     }
 
     /**
@@ -36,6 +40,11 @@ public class headerstock extends javax.swing.JFrame {
         jComboBox2 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -115,6 +124,14 @@ public class headerstock extends javax.swing.JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here
+        tm = new 
+                
+        jTable1.setModel(tm);
+        
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
