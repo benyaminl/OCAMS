@@ -264,6 +264,7 @@ public class FormKasir extends javax.swing.JFrame {
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         // Masukan di Header
+        
         OCAMS.SQL.executeNonQuery("INSERT INTO htrans_penjualan VALUES('','','','','')");
         
     }//GEN-LAST:event_jButton3MouseClicked

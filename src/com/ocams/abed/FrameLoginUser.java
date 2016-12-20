@@ -1,6 +1,6 @@
 package com.ocams.abed;
 
-import com.ocams.OCAMS;
+
 import com.ocams.benyamin.FormKasir;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,6 +35,10 @@ public class FrameLoginUser extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        txtUserID.setText("AD001");
+
+        txtPassword.setText("multimedia");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("User ID  :");
@@ -100,7 +104,7 @@ public class FrameLoginUser extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Berhasil Login!", "Berhasil Login!"
                     , JOptionPane.INFORMATION_MESSAGE);
             setVisible(false);
-            new FormKasir().setVisible(true);
+            new FrameMasterAset().setVisible(true);
         }
         else{
             JOptionPane.showMessageDialog(rootPane, "Gagal Login! Cek user dan Password anda!", "Gagal Login!"

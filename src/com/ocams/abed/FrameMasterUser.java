@@ -1,9 +1,6 @@
 package com.ocams.abed;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,32 +16,20 @@ public class FrameMasterUser extends javax.swing.JFrame {
     public FrameMasterUser() {
         initComponents();
         DataUser();
+        AutoGenIDUser.setText("");
     }
     
     public void DataUser() {
         String kolom[] = {"ID_User","Nama","Alamat","Notlpn","Email","Password"}; //kolom untuk jTable yang ada di form
         DefaultTableModel dataU = new DefaultTableModel(null, kolom);
-        String SQL = "SELECT * FROM data_user";
-        Koneksi db = new Koneksi();
-        ResultSet rsU = db.executeQuery(SQL);
+        String SQL = "SELECT * FROM user";
+        ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray(SQL);
         
-        try {
-            while(rsU.next()) {  //selema sebnayak rs utk memasukn data
-                String iduser = rsU.getString(1);
-                String nama = rsU.getString(2);
-                String alamat = rsU.getString(3);
-                String notlpn = rsU.getString(4);
-                String email = rsU.getString(5);
-                String password = rsU.getString(6);
-                
-                String arr[] = {iduser,nama,alamat,notlpn,email,password};
-                dataU.addRow(arr);
-            }
-        } 
-        catch (SQLException ex) {
-            Logger.getLogger(FrameMasterUser.class.getName()).log(Level.SEVERE, null, ex);
+        for (int i = 0; i < data.size(); i++) {
+            String temp[] = data.get(i);
+            dataU.addRow(temp);
         }
-        tableAset.setModel(dataU);
+        tableUser.setModel(dataU);
     }
 
     @SuppressWarnings("unchecked")
@@ -64,7 +49,7 @@ public class FrameMasterUser extends javax.swing.JFrame {
         txtNotlpn = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableAset = new javax.swing.JTable();
+        tableUser = new javax.swing.JTable();
         INSERT = new javax.swing.JButton();
         UPDATE = new javax.swing.JButton();
         DELETE = new javax.swing.JButton();
@@ -90,7 +75,7 @@ public class FrameMasterUser extends javax.swing.JFrame {
 
         txtAlamat.setToolTipText("");
 
-        tableAset.setModel(new javax.swing.table.DefaultTableModel(
+        tableUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -101,12 +86,12 @@ public class FrameMasterUser extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tableAset.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableUser.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableAsetMouseClicked(evt);
+                tableUserMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tableAset);
+        jScrollPane1.setViewportView(tableUser);
 
         INSERT.setText("INSERT");
         INSERT.addActionListener(new java.awt.event.ActionListener() {
@@ -175,21 +160,19 @@ public class FrameMasterUser extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtNotlpn, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(cbJabatan, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(AutoGenIDUser)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jLabel2)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(txtAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                        .addContainerGap(341, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)
-                        .addContainerGap())))
+                                    .addComponent(cbJabatan, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(AutoGenIDUser)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jLabel2)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(txtAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(0, 331, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,21 +218,26 @@ public class FrameMasterUser extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cbJabatanItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbJabatanItemStateChanged
+        String function = "";
+        
         if (cbJabatan.getSelectedItem().equals("MANAGER")) {
-            AutoGenIDUser.setText("MA002");
+            function = "SELECT kodeuser('MA')";
         }else if (cbJabatan.getSelectedItem().equals("ADMIN")) {
-            AutoGenIDUser.setText("AD002");
+            function = "SELECT kodeuser('AD')";
         }else if (cbJabatan.getSelectedItem().equals("KASIR")) {
-            AutoGenIDUser.setText("KA002");
+            function = "SELECT kodeuser('KA')";
         }else if (cbJabatan.getSelectedItem().equals("STOCK")) {
-            AutoGenIDUser.setText("ST002");
+            function = "SELECT kodeuser('ST')";
         }
+        AutoGenIDUser.setText(OCAMS.SQL.executeGetScalar(function));
     }//GEN-LAST:event_cbJabatanItemStateChanged
 
     private void INSERTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_INSERTActionPerformed
-        String SQLinsert = "INSERT INTO data_user (ID_User,Nama,Alamat,Notlpn,Email,Password) " + "VALUES('" + AutoGenIDUser.getText() + "','" + txtNama.getText() + "','" + txtAlamat.getText() + "','" + txtNotlpn.getText() + "','" + txtEmail.getText() + "','" + txtPassword.getText() + "')";
-        Koneksi ii = new Koneksi();    
-        int status = ii.execute(SQLinsert);
+        String SQLinsert = "INSERT INTO user (ID_User,Nama,Alamat,Notlpn,Email,Password) " 
+                + "VALUES('" + AutoGenIDUser.getText() + "','" + txtNama.getText() 
+                + "','" + txtAlamat.getText() + "','" + txtNotlpn.getText() 
+                + "','" + txtEmail.getText() + "','" + txtPassword.getText() + "')";
+        int status = OCAMS.SQL.executeNonQuery(SQLinsert);
 
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Insert Data berhasil", "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -260,9 +248,10 @@ public class FrameMasterUser extends javax.swing.JFrame {
     }//GEN-LAST:event_INSERTActionPerformed
 
     private void UPDATEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UPDATEActionPerformed
-        String SQLUpdate = "UPDATE data_user SET Nama = '" + txtNama.getText() + "' , Alamat = '" + txtAlamat.getText() + "' , Notlpn = '" + txtNotlpn.getText() + "' , Email = '" + txtEmail.getText() + "' , Password = '" + txtPassword.getText() + "' WHERE ID_User = '" + AutoGenIDUser.getText() + "'";
-        Koneksi uu = new Koneksi();
-        int status = uu.execute(SQLUpdate);
+        String SQLUpdate = "UPDATE user SET Nama = '" + txtNama.getText() + "' , Alamat = '" + txtAlamat.getText() 
+                + "' , Notlpn = '" + txtNotlpn.getText() + "' , Email = '" + txtEmail.getText() 
+                + "' , Password = '" + txtPassword.getText() + "' WHERE ID_User = '" + AutoGenIDUser.getText() + "'";
+        int status = OCAMS.SQL.executeNonQuery(SQLUpdate);
 
         if (status==1) {
             JOptionPane.showMessageDialog(this, "Data berhasil diupdate", "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -272,18 +261,18 @@ public class FrameMasterUser extends javax.swing.JFrame {
         DataUser();
     }//GEN-LAST:event_UPDATEActionPerformed
 
-    private void tableAsetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAsetMouseClicked
-        int baris = tableAset.getSelectedRow();
+    private void tableUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableUserMouseClicked
+        int baris = tableUser.getSelectedRow();
         
         if (baris != -1) {
-            AutoGenIDUser.setText(tableAset.getValueAt(baris, 0).toString());
-            txtNama.setText(tableAset.getValueAt(baris, 1).toString());
-            txtAlamat.setText(tableAset.getValueAt(baris, 2).toString());
-            txtNotlpn.setText(tableAset.getValueAt(baris, 3).toString());
-            txtEmail.setText(tableAset.getValueAt(baris, 4).toString());
-            txtPassword.setText(tableAset.getValueAt(baris, 5).toString());
+            AutoGenIDUser.setText(tableUser.getValueAt(baris, 0).toString());
+            txtNama.setText(tableUser.getValueAt(baris, 1).toString());
+            txtAlamat.setText(tableUser.getValueAt(baris, 2).toString());
+            txtNotlpn.setText(tableUser.getValueAt(baris, 3).toString());
+            txtEmail.setText(tableUser.getValueAt(baris, 4).toString());
+            txtPassword.setText(tableUser.getValueAt(baris, 5).toString());
         }
-    }//GEN-LAST:event_tableAsetMouseClicked
+    }//GEN-LAST:event_tableUserMouseClicked
 
     private void CLEARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CLEARActionPerformed
         AutoGenIDUser.setText("");
@@ -295,9 +284,8 @@ public class FrameMasterUser extends javax.swing.JFrame {
     }//GEN-LAST:event_CLEARActionPerformed
 
     private void DELETEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DELETEActionPerformed
-        String SQLdelete = "DELETE FROM data_user WHERE ID_User = '" + AutoGenIDUser.getText() + "'";
-        Koneksi dd = new Koneksi();
-        int status = dd.execute(SQLdelete);
+        String SQLdelete = "DELETE FROM user WHERE ID_User = '" + AutoGenIDUser.getText() + "'";
+        int status = OCAMS.SQL.executeNonQuery(SQLdelete);
 
         if (status==1) {
             JOptionPane.showMessageDialog(this, "Data berhasil dihapus", "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -358,7 +346,7 @@ public class FrameMasterUser extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tableAset;
+    private javax.swing.JTable tableUser;
     private javax.swing.JTextField txtAlamat;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNama;
