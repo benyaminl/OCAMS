@@ -1,8 +1,20 @@
 package com.ocams.andre;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 public class MasterMenu extends javax.swing.JFrame {
     public MasterMenu() {
         initComponents();
+    }
+    public static void selectData() {
+        String kolom[] = {"Kode","Nama Menu","Kategori","Harga"}; //kolom untuk jTable yang ada di form
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "SELECT * FROM menu";
+        ArrayList<String[]> data = com.ocams.andre.OCAMS.SQL.executeQueryGetArray(SQL);
+        for(String[] d: data){
+            dtm.addRow(d);
+        }
+        jTable1.setModel(dtm);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -15,7 +27,6 @@ public class MasterMenu extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jButton3 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -33,13 +44,10 @@ public class MasterMenu extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton5 = new javax.swing.JButton();
-        jSpinner2 = new javax.swing.JSpinner();
 
         jButton3.setText("jButton3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jLabel1.setText("Nomor:");
 
         jLabel2.setText("Kode:");
 
@@ -86,7 +94,7 @@ public class MasterMenu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nomor", "Kode", "Nama", "Kategori", "Harga"
+                "Kode", "Nama", "Kategori", "Harga"
             }
         ));
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -111,13 +119,14 @@ public class MasterMenu extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton4)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton4))
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                             .addComponent(jLabel5)
@@ -128,18 +137,15 @@ public class MasterMenu extends javax.swing.JFrame {
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                             .addComponent(jRadioButton1)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jRadioButton2))))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel1))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jSpinner2, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE))
+                                            .addComponent(jRadioButton2)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel2))
+                                        .addGap(22, 22, 22)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -153,43 +159,43 @@ public class MasterMenu extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jRadioButton1)
+                            .addComponent(jRadioButton2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        String nomor = String.valueOf(jSpinner2.getValue());
         String kode = jTextField2.getText();
         String nama = jTextField3.getText();
         String kategori = "";
@@ -198,28 +204,30 @@ public class MasterMenu extends javax.swing.JFrame {
         }else if (jRadioButton2.isSelected()){
             kategori = "Minuman";
         }
-        String harga = String.valueOf(jSpinner2.getValue());
-        
-        Object[] row = {nomor,kode,nama,kategori,harga};
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.addRow(row);
+        int harga = Integer.parseInt(String.valueOf(jSpinner1.getValue()));
+        String SQL = "INSERT INTO `menu`(`kode`, `nama`, `kategori`, `harga`) VALUES ('" + kode + "','" + nama + "','" + kategori + "'," + harga + ")";
+        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
+        if (status == 1) {
+            JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            selectData();
+        }else {
+            JOptionPane.showMessageDialog(this, "Data gagal ditambahkan!", "Gagal", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1MouseClicked
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         int baris = jTable1.rowAtPoint(evt.getPoint());
-        jSpinner2.setValue(Integer.parseInt(String.valueOf(jTable1.getValueAt(baris, 0))));
-        jTextField2.setText(String.valueOf(jTable1.getValueAt(baris, 1)));
-        jTextField3.setText(String.valueOf(jTable1.getValueAt(baris,2)));
-        String kategori = String.valueOf(jTable1.getValueAt(baris,3));
+        jTextField2.setText(String.valueOf(jTable1.getValueAt(baris, 0)));
+        jTextField3.setText(String.valueOf(jTable1.getValueAt(baris,1)));
+        String kategori = String.valueOf(jTable1.getValueAt(baris,2));
         if ("makanan".equalsIgnoreCase(kategori)){
             jRadioButton1.setSelected(true);
         }else if("minuman".equalsIgnoreCase(kategori)){
             jRadioButton2.setSelected(false);
         }
-        jSpinner1.setValue(Integer.parseInt(String.valueOf(jTable1.getValueAt(baris, 4))));
+        jSpinner1.setValue(Integer.parseInt(String.valueOf(jTable1.getValueAt(baris, 3))));
     }//GEN-LAST:event_jTable1MouseClicked
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         int baris = jTable1.rowAtPoint(evt.getPoint());
-        String nomor = String.valueOf(jSpinner2.getValue());
         String kode = jTextField2.getText();
         String nama = jTextField3.getText();
         String kategori = "";
@@ -228,19 +236,26 @@ public class MasterMenu extends javax.swing.JFrame {
         }else if (jRadioButton2.isSelected()){
             kategori = "Minuman";
         }
-        String harga = String.valueOf(jSpinner2.getValue());
-        
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setValueAt(nomor, baris, 0);
-        model.setValueAt(kode, baris, 1);
-        model.setValueAt(nama, baris, 2);
-        model.setValueAt(kategori, baris, 3);
-        model.setValueAt(harga, baris, 4);
+        int harga = Integer.parseInt(String.valueOf(jSpinner1.getValue()));
+        String SQL = "UPDATE menu SET nama='" + nama + "',kategori='" + kategori + "',harga=" + harga + " WHERE kode='" + kode + "'";
+        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
+        if (status == 1) {
+            JOptionPane.showMessageDialog(this, "Data berhasil diperbaharui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            selectData();
+        }else {
+            JOptionPane.showMessageDialog(this, "Data gagal diperbaharui!", "Gagal", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton2MouseClicked
-
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.removeRow(jTable1.rowAtPoint(evt.getPoint()));
+        String kode = jTextField2.getText();
+        String SQL = "DELETE FROM menu WHERE kode='" + kode + "'";
+        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
+        if (status == 1) {
+            JOptionPane.showMessageDialog(this, "Data berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            selectData();
+        }else {
+            JOptionPane.showMessageDialog(this, "Data gagal dihapus!", "Gagal", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton4MouseClicked
     /**
      * @param args the command line arguments
@@ -282,7 +297,6 @@ public class MasterMenu extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -293,8 +307,7 @@ public class MasterMenu extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
-    private javax.swing.JTable jTable1;
+    private static javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables

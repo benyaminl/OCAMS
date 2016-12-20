@@ -19,7 +19,7 @@ public class OCAMS {
         //new MasterReferensi().setVisible(true);
         //new MasterTransaksi().setVisible(true);
         new FrameMenuAplikasi().setVisible(true);
-        new MasterAbsensi().setVisible(true);
+        //new MasterAbsensi().setVisible(true);
     }
     public static Connection setKoneksi() {
         String konString = "jdbc:mysql://localhost:3306/ref";
