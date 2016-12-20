@@ -17,15 +17,24 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Ben
  */
-public class FormKasir extends javax.swing.JFrame {
+public class FormDetailKasir extends javax.swing.JFrame {
     DefaultTableModel table;
     DefaultComboBoxModel<String> cbMenu;
+    int maksDelete=-1;
+    FormHeaderKasir parent;
     /**
      * Creates new form FormKasir
      */
-    public FormKasir() {
+    public void setParent(FormHeaderKasir parent){
+        this.parent = parent;
+    }
+    
+    public FormDetailKasir() {
+        this.setUndecorated(true);
+        this.setType(Type.UTILITY);
         initComponents();
         String kode = "";
+        this.toFront();
         do {
             kode = randomID();
         } while (Integer.parseInt(OCAMS.SQL.executeGetScalar(
@@ -33,16 +42,52 @@ public class FormKasir extends javax.swing.JFrame {
         start(kode);
     }
     
-    public FormKasir(String kode){
+    public FormDetailKasir(String kode){
+        this.setUndecorated(true);
+        this.setType(Type.UTILITY);
         initComponents();
         start(kode);
+        txtMejaNo.setText(OCAMS.SQL.executeGetScalar("SELECT meja from header_jual where id_trans = '"+kode+"'"));
+        ArrayList<String[]> temp = OCAMS.SQL.executeQueryGetArray(
+            "SELECT d.ID_MENU, m.nama_menu, h.harga_jual, d.jumlah, d.jumlah * h.harga_jual\n" +
+            "FROM \n" +
+            "    menu m, \n" +
+            "    detail_jual d, \n" +
+            "    (SELECT id_menu,harga_jual, berlaku FROM harga) h, \n" +
+            "    (select id_menu, max(berlaku) as berlaku from harga group by id_menu) b\n" +
+            "WHERE\n" +
+            "    d.id_menu = m.id_menu and \n" +
+            "    h.id_menu = m.id_menu and \n" +
+            "    d.id_menu = m.id_menu and \n" +
+            "    b.id_menu = m.id_menu and\n" +
+            "    h.berlaku = b.berlaku and \n" +
+            "    d.ID_Jual = '"+kode+"'");
+        for(String[] d: temp){
+            table.addRow(d);
+        }
+        updateTotal();
+        lock();
+    }
+    
+    private void lock(){
+        maksDelete = table.getRowCount();
+        // Disable Some Part of the Form
+        btnClear.setEnabled(false); btnTransaksi.setText("Simpan Data"); txtMejaNo.setEnabled(false);
     }
     
     public void start(String kode){
+        setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE); // Ini untuk supaya ga close EXIT
         lblTransaksi.setText(kode);
         lblUser.setText(OCAMS.userYangLogin.getNama());
         String judul[] = {"Kode Menu","Nama Menu","Harga","Jumlah","Total"};
-        table = new DefaultTableModel(null, judul);
+        table = new DefaultTableModel(null, judul){
+            // http://stackoverflow.com/questions/1990817/how-to-make-a-jtable-non-editable
+            @Override
+            public boolean isCellEditable(int row, int column) {
+               //all cells false
+               return false;
+            }
+        };
         String tanggal = new SimpleDateFormat("dd-mm-yyyy").format(new Date());
         lblTgl.setText(tanggal); 
         GView.setModel(table);
@@ -69,24 +114,29 @@ public class FormKasir extends javax.swing.JFrame {
         lblUser = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         cbMenuList = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        btnTambah = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         GView = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
         lblSubTotal = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        btnBayar = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         spJumlah = new javax.swing.JSpinner();
         jLabel10 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        btnTransaksi = new javax.swing.JButton();
         txtMejaNo = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
+        btnHapus = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         lblTransaksi = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("Tanggal");
 
@@ -100,10 +150,10 @@ public class FormKasir extends javax.swing.JFrame {
 
         cbMenuList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jButton1.setText("Tambah");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnTambah.setText("Tambah");
+        btnTambah.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                btnTambahMouseClicked(evt);
             }
         });
 
@@ -124,7 +174,12 @@ public class FormKasir extends javax.swing.JFrame {
 
         lblSubTotal.setText("000000");
 
-        jButton2.setText("Bayar");
+        btnBayar.setText("Bayar");
+        btnBayar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBayarActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("Meja");
 
@@ -132,26 +187,37 @@ public class FormKasir extends javax.swing.JFrame {
 
         jLabel10.setText("Jumlah");
 
-        jButton3.setText("Transaksi");
-        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnTransaksi.setText("Transaksi");
+        btnTransaksi.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton3MouseClicked(evt);
+                btnTransaksiMouseClicked(evt);
+            }
+        });
+
+        txtMejaNo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMejaNoFocusLost(evt);
             }
         });
 
         jButton5.setText("Kembali");
-
-        jButton6.setText("Clear");
-        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton6MouseClicked(evt);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Hapus");
-        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnClear.setText("Clear");
+        btnClear.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton4MouseClicked(evt);
+                btnClearMouseClicked(evt);
+            }
+        });
+
+        btnHapus.setText("Hapus");
+        btnHapus.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnHapusMouseClicked(evt);
             }
         });
 
@@ -175,12 +241,12 @@ public class FormKasir extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(spJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
+                        .addComponent(btnTambah)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
+                        .addComponent(btnHapus)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton5))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -206,11 +272,11 @@ public class FormKasir extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lblUser))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton6)
+                                .addComponent(btnClear)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3)
+                                .addComponent(btnTransaksi)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2)))))
+                                .addComponent(btnBayar)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -234,30 +300,30 @@ public class FormKasir extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(cbMenuList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1)
+                            .addComponent(btnTambah)
                             .addComponent(spJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10)
-                            .addComponent(jButton4)))
+                            .addComponent(btnHapus)))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton5)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(lblSubTotal)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton6))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnBayar)
+                    .addComponent(btnTransaksi)
+                    .addComponent(btnClear))
+                .addContainerGap())
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void btnTambahMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTambahMouseClicked
         String kode = OCAMS.SQL.executeQueryGetArray("SELECT id_menu FROM menu where nama_menu like '%" 
                 + cbMenu.getSelectedItem().toString() + "%'").get(0)[0];
         int jumlah = Integer.parseInt(spJumlah.getValue().toString());
@@ -270,7 +336,7 @@ public class FormKasir extends javax.swing.JFrame {
         boolean check = true;
         for (int i = 0; i < table.getRowCount(); i++) {
             if(table.getValueAt(i, 0).toString().trim().equals(kode)) {
-                table.setValueAt(Integer.parseInt(table.getValueAt(i, 3).toString())+1, i, 3);
+                table.setValueAt(Integer.parseInt(table.getValueAt(i, 3).toString())+jumlah, i, 3);
                 table.setValueAt(Integer.parseInt(table.getValueAt(i, 2).toString()) 
                         * Integer.parseInt(table.getValueAt(i, 3).toString()), i, 4);
                 check = false;
@@ -278,30 +344,90 @@ public class FormKasir extends javax.swing.JFrame {
         }
         if(check || table.getRowCount() <=0) table.addRow(data);
         updateTotal();
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_btnTambahMouseClicked
 
-    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
-        if(table.getRowCount() > 0 ) table.removeRow(GView.getSelectedRow());
-    }//GEN-LAST:event_jButton4MouseClicked
+    private void btnHapusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapusMouseClicked
+        if(table.getRowCount() > 0 ){
+            if(GView.getSelectedRow() >= maksDelete){
+                table.removeRow(GView.getSelectedRow());
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Delete pada menu yang dipesan sebelumnya "
+                        + "tidak diperbolehkan! Hubungi manager untuk instruksi lebih lanjut!"
+                        , "STOP!", JOptionPane.WARNING_MESSAGE);
+            }
+        } 
+    }//GEN-LAST:event_btnHapusMouseClicked
 
-    private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
+    private void btnClearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClearMouseClicked
         while(table.getRowCount() > 0){
             table.removeRow(0);
         }
-    }//GEN-LAST:event_jButton6MouseClicked
+    }//GEN-LAST:event_btnClearMouseClicked
 
-    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-        String waktu = String.valueOf(LocalTime.now().getHour()) + String.valueOf(LocalTime.now().getMinute());
-        OCAMS.SQL.executeNonQuery("INSERT INTO header_jual VALUES('"+lblTransaksi.getText()+"','"+LocalDate.now()
-                +"','"+waktu+"','"+OCAMS.userYangLogin.getKdUser()+"',0,"+txtMejaNo.getText()+")");
-        for (int i = 0; i < table.getRowCount(); i++) {
-            String values = "'"+lblTransaksi.getText() + "','" + // Kode Trans
-                    table.getValueAt(i, 0).toString() + "'," + // Kode Makanan
-                    table.getValueAt(i, 3).toString();
-            OCAMS.SQL.executeNonQuery("INSERT INTO detail_jual VALUES("+values+")");
+    private void btnTransaksiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTransaksiMouseClicked
+        String waktu = String.format("%02d",LocalTime.now().getHour()) + String.format("%02d",LocalTime.now().getMinute());
+        int cek = Integer.parseInt(OCAMS.SQL.executeGetScalar(
+                "SELECT COUNT(*) FROM HEADER_JUAL WHERE MEJA = '"+txtMejaNo.getText()+"' AND STATUS = 0"));
+        if(cek > 0 && txtMejaNo.isEnabled()) {
+            JOptionPane.showMessageDialog(this, 
+            "Peringatan! Meja yang anda inputkan masih ada orangnya!","STOP!", JOptionPane.ERROR_MESSAGE);
         }
-        JOptionPane.showMessageDialog(this, "Transaksi Berhasil!");
-    }//GEN-LAST:event_jButton3MouseClicked
+        else{
+            OCAMS.SQL.executeNonQuery("INSERT INTO header_jual"
+                    + "(ID_Trans,Tanggal,Jam,Operator,status,meja) "
+                    + "VALUES('"+lblTransaksi.getText()+"','"+LocalDate.now()
+                    +"','"+waktu+"','"+OCAMS.userYangLogin.getKdUser()+"',0,"+txtMejaNo.getText()+") "
+                    + "on DUPLICATE KEY UPDATE ID_Trans = VALUES(ID_Trans),Tanggal = VALUES(Tanggal),"
+                    + "Jam = VALUES(Jam),Operator= VALUES(Operator),status= VALUES(status),meja= VALUES(meja)");
+            for (int i = 0; i < table.getRowCount(); i++) {
+                String values = "'"+lblTransaksi.getText() + "','" + // Kode Trans
+                        table.getValueAt(i, 0).toString() + "'," + // Kode Makanan
+                        table.getValueAt(i, 3).toString();
+                OCAMS.SQL.executeNonQuery("INSERT INTO detail_jual(ID_Jual,ID_Menu,Jumlah) VALUES("+values+")"
+                        + " on  DUPLICATE KEY UPDATE"
+                        + " ID_Jual = VALUES(ID_JUAL) , ID_MENU = VALUES(ID_MENU), JUMLAH = VALUES(JUMLAH)");
+            }
+            JOptionPane.showMessageDialog(this, "Transaksi Berhasil!");
+            if(txtMejaNo.isEnabled() == false) lock();
+        }
+    }//GEN-LAST:event_btnTransaksiMouseClicked
+
+    private void txtMejaNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMejaNoFocusLost
+        int cek = Integer.parseInt(OCAMS.SQL.executeGetScalar(
+                "SELECT COUNT(*) FROM HEADER_JUAL WHERE MEJA = '"+txtMejaNo.getText()+"' AND STATUS = 0"));
+        if(cek > 0) JOptionPane.showMessageDialog(this, 
+                "Peringatan! Meja yang anda inputkan masih ada orangnya!","STOP!", JOptionPane.ERROR_MESSAGE);
+    }//GEN-LAST:event_txtMejaNoFocusLost
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
+        int bayar=0,cek=0;
+        String text="";
+        do {
+            text = JOptionPane.showInputDialog(this, "Masukan Jumlah Pembayaran!");
+            if(text != null) bayar = Integer.parseInt(text);
+            cek++;
+            if(cek > 1) JOptionPane.showMessageDialog(this, "Uang Kurang, Minta uang lagi ke pelanggan!");
+        } while (bayar - Integer.parseInt(lblSubTotal.getText()) < 0 && text != null);
+        if(text != null){
+            JOptionPane.showMessageDialog(this, "Close Bill berhasil!\n\nKembali = " 
+                    + String.valueOf(bayar - Integer.parseInt(lblSubTotal.getText())));
+            OCAMS.SQL.executeNonQuery("UPDATE HEADER_JUAL SET status = 1 where id_trans = '"+lblTransaksi.getText()+"'");
+        }
+        //parent.updateTable();
+    }//GEN-LAST:event_btnBayarActionPerformed
+    
+    public void lunas(){
+        
+    }
+    
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        parent.updateTable();
+    }//GEN-LAST:event_formWindowClosing
     
     public String randomID(){
         String temp = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
@@ -341,33 +467,34 @@ public class FormKasir extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormKasir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormDetailKasir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormKasir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormDetailKasir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormKasir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormDetailKasir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormKasir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormDetailKasir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormKasir().setVisible(true);
+                new FormDetailKasir().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable GView;
+    private javax.swing.JButton btnBayar;
+    private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnHapus;
+    private javax.swing.JButton btnTambah;
+    private javax.swing.JButton btnTransaksi;
     private javax.swing.JComboBox<String> cbMenuList;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
