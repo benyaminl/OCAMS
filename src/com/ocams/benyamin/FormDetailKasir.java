@@ -1,6 +1,8 @@
 package com.ocams.benyamin;
 
 import com.ocams.OCAMS;
+import com.ocams.abed.UAdmin;
+import com.ocams.abed.UManager;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -389,7 +391,8 @@ public class FormDetailKasir extends javax.swing.JFrame {
                         + " ID_Jual = VALUES(ID_JUAL) , ID_MENU = VALUES(ID_MENU), JUMLAH = VALUES(JUMLAH)");
             }
             JOptionPane.showMessageDialog(this, "Transaksi Berhasil!");
-            if(txtMejaNo.isEnabled() == false) lock();
+            if(txtMejaNo.isEnabled() == false || OCAMS.userYangLogin instanceof UManager ||
+                    OCAMS.userYangLogin instanceof UAdmin) lock();
         }
     }//GEN-LAST:event_btnTransaksiMouseClicked
 
