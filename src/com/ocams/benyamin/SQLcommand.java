@@ -172,6 +172,7 @@ public class SQLcommand {
      * @param keterangan adalah keterangan yang dimiliki oleh setiap transaksi yang ada, misal jika kita melakukan pembelian stock atau pengeluaran stock dll
      * @param perkiraan adalah array of string, untuk insert ke jurnal, misal stock dikeluarkan maka {"HPP",8000,0} dan {"Stock",0,8000}
      */
+    // String data[] = {"Aset,2000,0","HUTANG,0,2000"};
     public void pencatatanJurnalTransaksi(String kode,String keterangan,String perkiraan[]){
         String sql = "INSERT INTO HEADER_Jual VALUES('"+kode+"',CURRENT_DATE,'"
                 +LocalTime.now().getHour()+LocalTime.now().getMinute()+"','"+keterangan+"','"+OCAMS.userYangLogin.getKdUser()+"')";
