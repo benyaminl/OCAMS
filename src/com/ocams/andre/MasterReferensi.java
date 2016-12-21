@@ -11,11 +11,11 @@ public class MasterReferensi extends javax.swing.JFrame {
         initComponents();
         OCAMS.SQL.setPanel(this);
     }
-    public static void selectData() {
+    public static void selectData(String SQL) {
         String kolom[] = {"Nomor","Nama"}; //kolom untuk jTable yang ada di form
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
-        String SQL = "SELECT * FROM noref";
-        ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray(SQL);
+        String SQL2 = SQL;
+        ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray(SQL2);
         for(String[] d: data){
             dtm.addRow(d);
         }
@@ -36,6 +36,7 @@ public class MasterReferensi extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -88,6 +89,13 @@ public class MasterReferensi extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jTable2);
 
+        jButton4.setText("SEARCH");
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton4MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -111,10 +119,15 @@ public class MasterReferensi extends javax.swing.JFrame {
                                 .addComponent(jButton2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton3)))
-                        .addGap(70, 70, 70)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(70, 70, 70)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton4))))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
@@ -135,7 +148,8 @@ public class MasterReferensi extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -144,14 +158,16 @@ public class MasterReferensi extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        selectData();
+        String SQL = "SELECT * FROM noref";
+        selectData(SQL);
     }//GEN-LAST:event_formWindowActivated
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         String SQL = "INSERT INTO `noref`(`Nomor`, `Nama`) VALUES (" + Integer.parseInt(jTextField1.getText()) + ",'" + String.valueOf(jTextField2.getText()) + "')";
         int status = OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-            selectData();
+            String SQL2 = "SELECT * FROM noref";
+            selectData(SQL2);
         }else {
             JOptionPane.showMessageDialog(this, "Data gagal ditambahkan!", "Gagal", JOptionPane.WARNING_MESSAGE);
         }
@@ -161,7 +177,8 @@ public class MasterReferensi extends javax.swing.JFrame {
         int status = OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil diperbaharui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-            selectData();
+            String SQL2 = "SELECT * FROM noref";
+            selectData(SQL2);
         }else {
             JOptionPane.showMessageDialog(this, "Data gagal diperbaharui!", "Gagal", JOptionPane.WARNING_MESSAGE);
         }
@@ -171,7 +188,8 @@ public class MasterReferensi extends javax.swing.JFrame {
         int status = OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-            selectData();
+            String SQL2 = "SELECT * FROM noref";
+            selectData(SQL2);
         }else {
             JOptionPane.showMessageDialog(this, "Data gagal dihapus!", "Gagal", JOptionPane.WARNING_MESSAGE);
         }
@@ -183,6 +201,10 @@ public class MasterReferensi extends javax.swing.JFrame {
             jTextField2.setText(jTable2.getValueAt(baris, 1).toString());
         }
     }//GEN-LAST:event_jTable2MouseClicked
+    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
+        String SQL2 = "SELECT * FROM noref WHERE nomor LIKE '%" + String.valueOf(jTextField1.getText()) + "%' AND nama LIKE '%" + String.valueOf(jTextField2.getText()) + "%'";
+        selectData(SQL2);
+    }//GEN-LAST:event_jButton4MouseClicked
     /**
      * @param args the command line arguments
      */
@@ -220,6 +242,7 @@ public class MasterReferensi extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
