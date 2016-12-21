@@ -30,3 +30,4 @@ hs_err_pid*
 /build/
 /UAS_PBO_1/nbproject/private/
 /UAS_PBO_2/nbproject/private/
+/dist/

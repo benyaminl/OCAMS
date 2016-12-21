@@ -40,7 +40,7 @@ public class FormDetailKasir extends javax.swing.JFrame {
         do {
             kode = randomID();
         } while (Integer.parseInt(OCAMS.SQL.executeGetScalar(
-                "SELECT COUNT(*) FROM HEADER_JUAL WHERE ID_TRANS = '" + randomID() + "'")) > 0);
+                "SELECT COUNT(*) FROM HEADER_JUAL WHERE ID_TRANS = '" + kode + "'")) > 0);
         start(kode);
     }
     
@@ -75,6 +75,9 @@ public class FormDetailKasir extends javax.swing.JFrame {
         maksDelete = table.getRowCount();
         // Disable Some Part of the Form
         btnClear.setEnabled(false); btnTransaksi.setText("Simpan Data"); txtMejaNo.setEnabled(false);
+        if(!OCAMS.SQL.executeGetScalar("SELECT status from header_jual where ID_Trans = '"
+                + lblTransaksi.getText() + "'").equalsIgnoreCase("1"))
+            btnBayar.setEnabled(false);
     }
     
     public void start(String kode){
@@ -135,6 +138,9 @@ public class FormDetailKasir extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
@@ -420,8 +426,9 @@ public class FormDetailKasir extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Close Bill berhasil!\n\nKembali = " 
                     + String.valueOf(bayar - Integer.parseInt(lblSubTotal.getText())));
             OCAMS.SQL.executeNonQuery("UPDATE HEADER_JUAL SET status = 1 where id_trans = '"+lblTransaksi.getText()+"'");
+            btnBayar.setEnabled(false);
         }
-        //parent.updateTable();
+        parent.updateTable();
     }//GEN-LAST:event_btnBayarActionPerformed
     
     public void lunas(){
@@ -431,6 +438,10 @@ public class FormDetailKasir extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         parent.updateTable();
     }//GEN-LAST:event_formWindowClosing
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        parent.updateTable();
+    }//GEN-LAST:event_formWindowClosed
     
     public String randomID(){
         String temp = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";

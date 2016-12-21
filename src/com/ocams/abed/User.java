@@ -11,7 +11,7 @@ package com.ocams.abed;
  */
 public class User {
     protected String kdUser,Nama,Alamat,Notlp,Email,Password,SQL;
-
+    
     public User(String kdUser, String Nama, String Alamat, String Notlp, String Email, String Password, String SQL) {
         this.kdUser = kdUser;
         this.Nama = Nama;

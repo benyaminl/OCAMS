@@ -1,4 +1,5 @@
 package com.ocams.andre;
+import com.ocams.OCAMS;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -43,7 +44,7 @@ public class MasterTransaksi extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -215,6 +216,7 @@ public class MasterTransaksi extends javax.swing.JFrame {
             jTextField3.setText(jTable1.getValueAt(baris, 2).toString());
             jTextField4.setText(jTable1.getValueAt(baris, 3).toString());
             kodetrans = jTable1.getValueAt(baris, 0).toString();
+            new FrameDetailTransaksi().setVisible(true);
         }
     }//GEN-LAST:event_jTable1MouseClicked
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated

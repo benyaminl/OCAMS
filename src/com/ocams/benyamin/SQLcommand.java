@@ -1,10 +1,12 @@
 package com.ocams.benyamin;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JOptionPane;
 
 /**
@@ -104,8 +106,11 @@ public class SQLcommand {
         String hasil = ""; ResultSet rs = null;
         try {
             Statement stmt = conn().createStatement();
-            rs = stmt.executeQuery(sql); rs.next();
-            hasil = rs.getObject(1).toString();
+            rs = stmt.executeQuery(sql); 
+            if(rs == null){
+                rs.next();
+                hasil = rs.getObject(1).toString(); 
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(panel, e.toString(), "Database error", 
                     JOptionPane.ERROR_MESSAGE);
@@ -137,4 +142,29 @@ public class SQLcommand {
        return cek;
     }
     
+    private String randomID(){
+        String temp = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        String hasil = "";
+        char charArray[] = temp.toCharArray();
+        for (int i = 0; i < 10; i++) {
+            Random random = new SecureRandom();
+            hasil += String.valueOf(charArray[random.nextInt(charArray.length)]);
+        }
+        return hasil;
+    }
+    
+    public String transID(){
+        String kode ="";
+        do {
+            kode = randomID();
+        } while (Integer.parseInt(executeGetScalar(
+                "SELECT COUNT(*) FROM HTRANS WHERE KODE = '" + kode + "'")) > 0);
+        return kode;
+    }
+    
+    public int pencatatanJurnalTransaksi(){
+        int status = 0;
+        
+        return status;
+    }
 }

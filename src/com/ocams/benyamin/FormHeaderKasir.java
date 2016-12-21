@@ -66,13 +66,13 @@ public class FormHeaderKasir extends javax.swing.JFrame {
             try {
                 Date awal = sdf.parse(dpTanggalAwal.getText()); 
                 Date akhir = sdf.parse(dpTanggalAkhir.getText());
-                if(awal.after(akhir) || akhir.before(awal)){
+                if(awal.after(akhir)){
                     JOptionPane.showMessageDialog(this, "Tanggal Anda Salah! Cek kembali, "
                             + "tanggal awal tidak boleh lebih dari tanggal akhir atau sebaliknya!");
                 }
                 else{
-                    sql  += " and h.tanggal >= '"+dpTanggalAwal.getText()
-                    +"' and h.tanggal <='"+dpTanggalAkhir.getText()+"'";
+                    sql  += " and h.tanggal >= STR_TO_DATE('"+dpTanggalAwal.getText()
+                    +"','%d-%m-%Y') and h.tanggal <=STR_TO_DATE('"+dpTanggalAkhir.getText()+"','%d-%m-%Y')";
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, e.toString());
@@ -84,8 +84,9 @@ public class FormHeaderKasir extends javax.swing.JFrame {
         if(rbLunas.isSelected()) sql+= " and h.status = 1";
         if(rbBelum.isSelected()) sql+= " and h.status = 0";
         ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray(sql);
-        for (int i = 0; i < table.getRowCount(); i++) {
-            table.removeRow(i);
+        int jumlah = table.getRowCount();
+        for (int i = 0; i < jumlah; i++) {
+            table.removeRow(0);
         }
         for(String[] d: data){
             table.addRow(d);

@@ -1,18 +1,20 @@
 package com.ocams.andre;
 import static com.ocams.andre.MasterReferensi.selectData;
+import com.ocams.OCAMS;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 public class MasterJurnal extends javax.swing.JFrame {
     public MasterJurnal() {
         initComponents();
-        //com.ocams.OCAMS.SQL.setPanel(this);
+        com.ocams.OCAMS.SQL.setPanel(this);
+        lblUser.setText(OCAMS.userYangLogin.getNama());
     }
     public static void selectData() {
         String kolom[] = {"Kode","Perkiraan","No. Ref","Debit","Kredit"}; //kolom untuk jTable yang ada di form
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
         String SQL = "SELECT * FROM jurnal";
-        ArrayList<String[]> data = com.ocams.andre.OCAMS.SQL.executeQueryGetArray(SQL);
+        ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray(SQL);
         for(String[] d: data){
             dtm.addRow(d);
         }
@@ -39,8 +41,7 @@ public class MasterJurnal extends javax.swing.JFrame {
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        lblUser = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -48,7 +49,7 @@ public class MasterJurnal extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         jTextField4 = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -73,9 +74,7 @@ public class MasterJurnal extends javax.swing.JFrame {
 
         jLabel6.setText("User:");
 
-        jLabel7.setText("NamaUser");
-
-        jButton1.setText("Logout");
+        lblUser.setText("NamaUser");
 
         jButton2.setText("Insert");
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -127,12 +126,9 @@ public class MasterJurnal extends javax.swing.JFrame {
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7))
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblUser))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -165,12 +161,11 @@ public class MasterJurnal extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(jLabel7))
+                    .addComponent(lblUser))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -195,6 +190,7 @@ public class MasterJurnal extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         String kode = jTextField1.getText();
@@ -210,7 +206,7 @@ public class MasterJurnal extends javax.swing.JFrame {
             kredit = Integer.parseInt(jTextField4.getText());
         }
         String SQL = "INSERT INTO `jurnal`(`Kode`, `Perkiraan`, `NoRef`, `Debit`, `Kredit`) VALUES ('" + kode + "','" + perkiraan + "'," + noref + "," + debit + "," + kredit + ")";
-        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
+        int status = OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
             selectData();
@@ -233,7 +229,7 @@ public class MasterJurnal extends javax.swing.JFrame {
             kredit = Integer.parseInt(jTextField4.getText());
         }
         String SQL = "UPDATE jurnal SET perkiraan='" + perkiraan + "',noref=" + noref + ",debit=" + debit + ",kredit=" + kredit + " WHERE kode='" + kode + "'";
-        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
+        int status = OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil diperbaharui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
             selectData();
@@ -243,7 +239,7 @@ public class MasterJurnal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3MouseClicked
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
         String SQL = "DELETE FROM jurnal WHERE kode='" + String.valueOf(jTextField1.getText());
-        int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
+        int status = OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
             selectData();
@@ -308,7 +304,6 @@ public class MasterJurnal extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -318,7 +313,6 @@ public class MasterJurnal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane2;
@@ -327,5 +321,6 @@ public class MasterJurnal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JLabel lblUser;
     // End of variables declaration//GEN-END:variables
 }
