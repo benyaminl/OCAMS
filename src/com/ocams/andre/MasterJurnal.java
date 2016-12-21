@@ -1,5 +1,4 @@
 package com.ocams.andre;
-import static com.ocams.andre.MasterReferensi.selectData;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
