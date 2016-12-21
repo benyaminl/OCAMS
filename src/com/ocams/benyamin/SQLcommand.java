@@ -173,9 +173,11 @@ public class SQLcommand {
      * @param perkiraan adalah array of string, untuk insert ke jurnal, misal stock dikeluarkan maka {"HPP",8000,0} dan {"Stock",0,8000}
      */
     // String data[] = {"Aset,2000,0","HUTANG,0,2000"};
-    public void pencatatanJurnalTransaksi(String kode,String keterangan,String perkiraan[]){
+    public void pencatatanJurnalTransaksi(String kode,String keterangan,String perkiraan[], String kodeUser){
         String sql = "INSERT INTO HEADER_Jual VALUES('"+kode+"',CURRENT_DATE,'"
-                +LocalTime.now().getHour()+LocalTime.now().getMinute()+"','"+keterangan+"','"+OCAMS.userYangLogin.getKdUser()+"')";
+                +LocalTime.now().getHour()+LocalTime.now().getMinute()+"','"
+                +keterangan+"','"+kodeUser+"')"
+                + "On Duplicate primary key UPDATE";
         executeNonQuery(sql);
         for(String d: perkiraan){
             String temp[] = d.split(",");
