@@ -4,24 +4,30 @@
  * and open the template in the editor.
  */
 package com.ocams.felix;
-
-import com.oracle.webservices.internal.api.databinding.DatabindingMode;
+import com.ocams.OCAMS;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Gp62
  */
 public class headerstock extends javax.swing.JFrame {
-
+    DefaultTableModel table;
     /**
      * Creates new form detailstock
      */
     public headerstock() {
         initComponents();
         
-        
     }
 
+    public void updateTable(){
+        String sql = "SELECT * from header_stock";
+        ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray(sql);
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -127,10 +133,6 @@ public class headerstock extends javax.swing.JFrame {
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here
-        tm = new 
-                
-        jTable1.setModel(tm);
-        
     }//GEN-LAST:event_formWindowActivated
 
     /**

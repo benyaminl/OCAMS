@@ -5,6 +5,7 @@ import com.ocams.OCAMS;
 import com.ocams.abed.FrameMasterUser;
 import com.ocams.abed.UManager;
 import com.ocams.benyamin.FormHeaderKasir;
+import com.ocams.benyamin.MasterBahan;
 import com.ocams.benyamin.MasterMenu;
 
 public class FrameMenuAplikasi extends javax.swing.JFrame {
@@ -36,6 +37,7 @@ public class FrameMenuAplikasi extends javax.swing.JFrame {
         btnUser = new javax.swing.JButton();
         btnBahan = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        btnAset1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,8 +109,25 @@ public class FrameMenuAplikasi extends javax.swing.JFrame {
                 btnBahanMouseClicked(evt);
             }
         });
+        btnBahan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBahanActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Resep");
+
+        btnAset1.setText("Absensi");
+        btnAset1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAset1MouseClicked(evt);
+            }
+        });
+        btnAset1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAset1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -121,7 +140,8 @@ public class FrameMenuAplikasi extends javax.swing.JFrame {
                     .addComponent(btnJurnal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnKasir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnStock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAset1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -169,14 +189,16 @@ public class FrameMenuAplikasi extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnAset)
-                            .addComponent(jButton1)))
+                            .addComponent(jButton1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAset1))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblNamaUser)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton5)))
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(127, Short.MAX_VALUE))
         );
 
         pack();
@@ -217,6 +239,18 @@ public class FrameMenuAplikasi extends javax.swing.JFrame {
     private void btnJurnalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJurnalActionPerformed
         new MasterJurnal().setVisible(true);
     }//GEN-LAST:event_btnJurnalActionPerformed
+
+    private void btnAset1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAset1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAset1MouseClicked
+
+    private void btnAset1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAset1ActionPerformed
+        new MasterAbsensi().setVisible(true);
+    }//GEN-LAST:event_btnAset1ActionPerformed
+
+    private void btnBahanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBahanActionPerformed
+        new MasterBahan().setVisible(true);
+    }//GEN-LAST:event_btnBahanActionPerformed
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -249,6 +283,7 @@ public class FrameMenuAplikasi extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAset;
+    private javax.swing.JButton btnAset1;
     private javax.swing.JButton btnBahan;
     private javax.swing.JButton btnHutang;
     private javax.swing.JButton btnJurnal;

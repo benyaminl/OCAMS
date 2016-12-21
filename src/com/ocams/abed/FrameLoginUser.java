@@ -4,6 +4,7 @@ import com.ocams.OCAMS;
 import com.ocams.andre.FrameMenuAplikasi;
 import com.ocams.benyamin.FormDetailKasir;
 import com.ocams.benyamin.FormHeaderKasir;
+import com.ocams.felix.FrameAbsensi;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -123,8 +124,12 @@ public class FrameLoginUser extends javax.swing.JFrame {
                             data[3], data[4], data[5], data[0]);
                     break;
             }
-            //new FormHeaderKasir().show();
-            new FrameMenuAplikasi().setVisible(true);
+            if(posisi.equalsIgnoreCase("AB")){
+                new FrameAbsensi().setVisible(true);
+            }
+            else{
+                new FrameMenuAplikasi().setVisible(true);
+            }
         }
         else{
             JOptionPane.showMessageDialog(rootPane, "Gagal Login! Cek user dan Password anda!", "Gagal Login!"

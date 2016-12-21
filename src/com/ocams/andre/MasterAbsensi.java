@@ -1,15 +1,17 @@
 package com.ocams.andre;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
+import com.ocams.OCAMS;
 public class MasterAbsensi extends javax.swing.JFrame {
     public MasterAbsensi() {
         initComponents();
+        lblUser.setText(OCAMS.userYangLogin.getNama());
     }
     public static void selectData(String SQL) {
         String kolom[] = {"ID Pegawai","Jam Masuk","Jam Keluar","Tanggal"}; //kolom untuk jTable yang ada di form
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
         String SQL2 = SQL;
-        ArrayList<String[]> data = com.ocams.andre.OCAMS.SQL.executeQueryGetArray(SQL2);
+        ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray(SQL2);
         for(String[] d: data){
             dtm.addRow(d);
         }
@@ -32,12 +34,12 @@ public class MasterAbsensi extends javax.swing.JFrame {
         dateChooserCombo1 = new datechooser.beans.DateChooserCombo();
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        lblUser = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        chbTgl = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -57,7 +59,7 @@ public class MasterAbsensi extends javax.swing.JFrame {
 
         jTextField3.setToolTipText("");
 
-        jLabel5.setText("NamaUser");
+        lblUser.setText("NamaUser");
 
         jLabel6.setText("User: ");
 
@@ -88,6 +90,7 @@ public class MasterAbsensi extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -109,13 +112,13 @@ public class MasterAbsensi extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel5))
+                                .addComponent(lblUser))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jCheckBox1)
+                                .addComponent(chbTgl)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
-                                .addComponent(jButton1))))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jButton1)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,7 +127,7 @@ public class MasterAbsensi extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
+                    .addComponent(lblUser)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -139,7 +142,7 @@ public class MasterAbsensi extends javax.swing.JFrame {
                     .addComponent(dateChooserCombo1, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton1)
-                    .addComponent(jCheckBox1))
+                    .addComponent(chbTgl))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(14, Short.MAX_VALUE))
@@ -167,12 +170,16 @@ public class MasterAbsensi extends javax.swing.JFrame {
         }else {
             jamkeluar = String.valueOf(jTextField3.getText());
         }
-        if (jCheckBox1.isSelected() == true){
+        if (chbTgl.isSelected() == true){
             tanggal = String.valueOf(dateChooserCombo1.getText());
-        }else if (jCheckBox1.isSelected() == false){
+        }else if (chbTgl.isSelected() == false){
             tanggal = "";
         }
-        String SQL = "SELECT * FROM absensi WHERE id_pegawai LIKE '%" + idpeg + "%' AND jam_masuk LIKE '%" + jammasuk + "%' AND jam_keluar LIKE '%" + jamkeluar + "%' AND tanggal LIKE '%" + tanggal + "%'";
+        String SQL = "SELECT * FROM absensi WHERE id_pegawai LIKE '%" 
+                + idpeg + "%' AND jam_masuk LIKE '%" + jammasuk + "%' "
+                + "AND jam_keluar LIKE '%" 
+                + jamkeluar + "%' ";
+        if(chbTgl.isSelected()) SQL += "AND tanggal = STR_TO_DATE('" + tanggal + "','%m/%d/%Y')";
         selectData(SQL);
     }//GEN-LAST:event_jButton1MouseClicked
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
@@ -213,19 +220,19 @@ public class MasterAbsensi extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox chbTgl;
     private datechooser.beans.DateChooserCombo dateChooserCombo1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private static javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel lblUser;
     // End of variables declaration//GEN-END:variables
 }
