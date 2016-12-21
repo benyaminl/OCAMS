@@ -2,7 +2,6 @@ package com.ocams.abed;
 
 import com.ocams.OCAMS;
 import com.ocams.andre.FrameMenuAplikasi;
-import com.ocams.andre.MasterMenu;
 import com.ocams.benyamin.FormDetailKasir;
 import com.ocams.benyamin.FormHeaderKasir;
 import java.sql.ResultSet;

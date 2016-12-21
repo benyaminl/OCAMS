@@ -7,6 +7,7 @@ package com.ocams.benyamin;
 
 import com.ocams.OCAMS;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MasterMenu extends javax.swing.JFrame {
     DefaultTableModel table;
+    String updateKode;
     /**
      * Creates new form MasterMenu
      */
@@ -26,14 +28,20 @@ public class MasterMenu extends javax.swing.JFrame {
         updateTable();
     }
     
+    
     public void updateTable(){
-        ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray("select h.id_menu, m.nama_menu,m.katagori"
+        String sql = "select h.id_menu, m.nama_menu,m.katagori"
                 + ", h.harga_jual\n" +
         "from harga h, (SELECT id_menu,max(berlaku) as berlaku FROM harga group by id_menu)b, menu m\n" +
-        "where h.berlaku = b.berlaku and h.id_menu = b.id_menu and m.id_menu = h.id_menu;");
-        for (int i = 0; i < table.getRowCount(); i++) {
+        "where h.berlaku = b.berlaku and h.id_menu = b.id_menu and m.id_menu = h.id_menu";
+        if(!txtCariKatagori.getText().isEmpty()) sql+= " and m.katagori like '%"+txtCariKatagori.getText()+"%'";
+        if(!txtCariNama.getText().isEmpty()) sql+= " and m.nama_menu like '%"+txtCariNama.getText()+"%'";
+        ArrayList<String[]> data = OCAMS.SQL.executeQueryGetArray(sql);
+        int jumlah = table.getRowCount();
+        for (int i = 0; i < jumlah; i++) {
             table.removeRow(0);
         }
+        
         for(String[] d : data){
             table.addRow(d);
         }
@@ -61,10 +69,8 @@ public class MasterMenu extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
+        txtCariNama = new javax.swing.JTextField();
+        txtCariKatagori = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         spHarga = new javax.swing.JSpinner();
@@ -129,6 +135,11 @@ public class MasterMenu extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        GView.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                GViewMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(GView);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -151,12 +162,22 @@ public class MasterMenu extends javax.swing.JFrame {
         getContentPane().add(jButton1, gridBagConstraints);
 
         jButton2.setText("Update");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 10;
         getContentPane().add(jButton2, gridBagConstraints);
 
         jButton3.setText("Delete");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 10;
@@ -184,27 +205,15 @@ public class MasterMenu extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        getContentPane().add(jTextField1, gridBagConstraints);
+        getContentPane().add(txtCariNama, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        getContentPane().add(jTextField2, gridBagConstraints);
-
-        jCheckBox1.setText("Nama");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 8;
-        getContentPane().add(jCheckBox1, gridBagConstraints);
-
-        jCheckBox2.setText("Katagori");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 10;
-        gridBagConstraints.gridy = 8;
-        getContentPane().add(jCheckBox2, gridBagConstraints);
+        getContentPane().add(txtCariKatagori, gridBagConstraints);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel8.setText("Cari Data");
@@ -214,15 +223,21 @@ public class MasterMenu extends javax.swing.JFrame {
         getContentPane().add(jLabel8, gridBagConstraints);
 
         jButton4.setText("Cari");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 12;
+        gridBagConstraints.gridx = 14;
         gridBagConstraints.gridy = 8;
         getContentPane().add(jButton4, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 7);
         getContentPane().add(spHarga, gridBagConstraints);
 
         pack();
@@ -230,9 +245,48 @@ public class MasterMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String kode = OCAMS.SQL.executeGetScalar("SELECT MAX");
-        
+        String kode = OCAMS.SQL.executeGetScalar("select CASE max(id_menu) \n" +
+        "    when null then\n" +
+        "        'M0001'\n" +
+        "    else\n" +
+        "        CONCAT('M',LPAD(CONVERT(SUBSTR(max(id_menu),2),SIGNED INTEGER)+1,4,'0'))\n" +
+        "    end\n" +
+        "from menu");
+        OCAMS.SQL.executeNonQuery("INSERT INTO menu values('"+kode+"','"
+                +txtNama.getText()+"','"+txtKatagori.getText()+"')");
+        OCAMS.SQL.executeNonQuery("INSERT INTO HARGA values('"+kode+"',CURRENT_DATE,"
+                +spHarga.getValue().toString()+")");
+        JOptionPane.showMessageDialog(this, "Insert Menu Baru Berhasil!");
+        updateTable();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void GViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_GViewMouseClicked
+        updateKode = table.getValueAt(GView.getSelectedRow(), 0).toString();
+        txtNama.setText(table.getValueAt(GView.getSelectedRow(), 1).toString());
+        txtKatagori.setText(table.getValueAt(GView.getSelectedRow(), 2).toString());
+        spHarga.setValue(Integer.parseInt(table.getValueAt(GView.getSelectedRow(), 3).toString()));
+    }//GEN-LAST:event_GViewMouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        OCAMS.SQL.executeNonQuery("UPDATE menu SET nama_menu='"
+                +txtNama.getText()+"',katagori = '"+txtKatagori.getText()+"' where id_menu='"+updateKode+"'");
+        OCAMS.SQL.executeNonQuery("INSERT INTO HARGA values('"+updateKode+"',CURRENT_DATE,"
+                +spHarga.getValue().toString()+")"
+                + "on duplicate key update harga_jual = '"+spHarga.getValue().toString()+"'");
+        JOptionPane.showMessageDialog(this, "Update menu Berhasil!");
+        updateTable();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        OCAMS.SQL.executeNonQuery("DELETE FROM menu where id_menu='"+updateKode+"'");
+        OCAMS.SQL.executeNonQuery("DELETE FROM harga where id_menu='"+updateKode+"'");
+        JOptionPane.showMessageDialog(this, "Delete menu Berhasil!");
+        updateTable();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        updateTable();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -275,8 +329,6 @@ public class MasterMenu extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -286,9 +338,9 @@ public class MasterMenu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JSpinner spHarga;
+    private javax.swing.JTextField txtCariKatagori;
+    private javax.swing.JTextField txtCariNama;
     private javax.swing.JTextField txtKatagori;
     private javax.swing.JTextField txtNama;
     // End of variables declaration//GEN-END:variables
