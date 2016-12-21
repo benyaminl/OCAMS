@@ -16,7 +16,7 @@ public class MasterTransaksi extends javax.swing.JFrame {
         for(String[] d: data){
             dtm.addRow(d);
         }
-        jTable1.setModel(dtm);
+        GView.setModel(dtm);
     }
     /**
      * This method is called from within constructor to initialize the form.
@@ -32,7 +32,7 @@ public class MasterTransaksi extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        GView = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
@@ -57,7 +57,7 @@ public class MasterTransaksi extends javax.swing.JFrame {
 
         jLabel3.setText("Waktu: ");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        GView.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -68,12 +68,12 @@ public class MasterTransaksi extends javax.swing.JFrame {
                 "Kode", "Tanggal", "Waktu", "Total"
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        GView.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                GViewMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(GView);
 
         jButton1.setText("Insert");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -208,17 +208,17 @@ public class MasterTransaksi extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Data gagal diperbaharui!", "Gagal", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton2MouseClicked
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int baris = jTable1.getSelectedRow();
+    private void GViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_GViewMouseClicked
+        int baris = GView.getSelectedRow();
          if (baris != -1) {
-            jTextField1.setText(jTable1.getValueAt(baris, 0).toString());
-            jTextField2.setText(jTable1.getValueAt(baris, 1).toString());
-            jTextField3.setText(jTable1.getValueAt(baris, 2).toString());
-            jTextField4.setText(jTable1.getValueAt(baris, 3).toString());
-            kodetrans = jTable1.getValueAt(baris, 0).toString();
+            jTextField1.setText(GView.getValueAt(baris, 0).toString());
+            jTextField2.setText(GView.getValueAt(baris, 1).toString());
+            jTextField3.setText(GView.getValueAt(baris, 2).toString());
+            jTextField4.setText(GView.getValueAt(baris, 3).toString());
+            kodetrans = GView.getValueAt(baris, 0).toString();
             new FrameDetailTransaksi().setVisible(true);
         }
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_GViewMouseClicked
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         selectData();
     }//GEN-LAST:event_formWindowActivated
@@ -253,6 +253,7 @@ public class MasterTransaksi extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private static javax.swing.JTable GView;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -264,7 +265,6 @@ public class MasterTransaksi extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private static javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
