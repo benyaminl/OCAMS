@@ -1,10 +1,14 @@
 package com.ocams.benyamin;
+import com.ocams.OCAMS;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JOptionPane;
 
 /**
@@ -136,5 +140,48 @@ public class SQLcommand {
        }
        return cek;
     }
+    
+    private String randomID(){
+        String temp = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        String hasil = "";
+        char charArray[] = temp.toCharArray();
+        for (int i = 0; i < 10; i++) {
+            Random random = new SecureRandom();
+            hasil += String.valueOf(charArray[random.nextInt(charArray.length)]);
+        }
+        return hasil;
+    }
+    
+    public String transID(){
+        String kode ="";
+        do {
+            kode = randomID();
+        } while (Integer.parseInt(executeGetScalar(
+                "SELECT COUNT(*) FROM header_jurnal WHERE ID_TRANS = '" + kode + "'")) > 0);
+        return kode;
+    }
+    
+    
+    /**
+     * Fungsi Pencatatan ke Jurnal Umum agar bisa buat laporan keuangan
+     * @param kode adalah kode yang digenerate oleh transID() Haruslah dari transID dan digunakan untuk semua agar bisa terkoneksi
+     * @param keterangan adalah keterangan yang dimiliki oleh setiap transaksi yang ada, misal jika kita melakukan pembelian stock atau pengeluaran stock dll
+     * @param perkiraan adalah array of string, untuk insert ke jurnal, misal stock dikeluarkan maka {"HPP",8000,0} dan {"Stock",0,8000}
+     * @param kodeUser didapatkan dengan menembak OCAMS.userYangLogin.getKduser()
+     */
+    // String data[] = {"Aset,2000,0","HUTANG,0,2000"};
+    public void pencatatanJurnalTransaksi(String kode,String keterangan,String perkiraan[],String kodeUser){
+        String sql = "INSERT INTO HEADER_Jurnal VALUES('"+kode+"',CURRENT_DATE,'"
+                +LocalTime.now().getHour()+LocalTime.now().getMinute()+"','"+keterangan+"','"+kodeUser+"')";
+        executeNonQuery(sql);
+        for(String d: perkiraan){
+            String temp[] = d.split(",");
+            String kodePerkiraan = executeGetScalar("Select nomor from noref where ucase(nama) like ucase('%"+ temp[0] +"%')");
+            temp[0] = kodePerkiraan;
+            sql = "INSERT INTO jurnal VALUES('"+kode+"',"+temp[0]+","+temp[1]+","+temp[2]+")";
+            executeNonQuery(sql);
+        }
+    }
+    
     
 }

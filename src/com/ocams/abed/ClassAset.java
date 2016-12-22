@@ -11,12 +11,14 @@ package com.ocams.abed;
  */
 public class ClassAset {
     protected String IdUser,NamaAset;
+    protected String tanggal;
     protected int HargaBeli;
     protected String transaksi;
 
-    public ClassAset(String IdUser, String NamaAset, int HargaBeli, String transaksi) {
+    public ClassAset(String IdUser, String NamaAset, String tanggal, int HargaBeli, String transaksi) {
         this.IdUser = IdUser;
         this.NamaAset = NamaAset;
+        this.tanggal = tanggal;
         this.HargaBeli = HargaBeli;
         this.transaksi = transaksi;
     }
@@ -35,6 +37,14 @@ public class ClassAset {
 
     public void setNamaAset(String NamaAset) {
         this.NamaAset = NamaAset;
+    }
+
+    public String getTanggal() {
+        return tanggal;
+    }
+
+    public void setTanggal(String tanggal) {
+        this.tanggal = tanggal;
     }
 
     public int getHargaBeli() {

@@ -295,6 +295,12 @@ public class FrameMasterAset extends javax.swing.JFrame {
         
         String UpdateHJ = "UPDATE header_jurnal SET Tanggal = STR_TO_DATE('" + dateTanggal.getText() + "','%d-%m-%Y') WHERE ID_TRANS = '" + labelIDTRANS.getText() + "'";
         OCAMS.SQL.executeNonQuery(UpdateHJ);
+        
+        String UpdateJ1 = "UPDATE jurnal SET Kredit = " + txtHargaBeli.getText() + " WHERE kode = '" + labelIDTRANS.getText() + "' AND NoRef = 102";
+        OCAMS.SQL.executeNonQuery(UpdateJ1);
+        
+        String UpdateJ2 = "UPDATE jurnal SET Debit = " + txtHargaBeli.getText() + " WHERE kode = '" + labelIDTRANS.getText() + "' AND NoRef = 111";
+        OCAMS.SQL.executeNonQuery(UpdateJ2);
 
         if (status==1) {
             JOptionPane.showMessageDialog(this, "Data berhasil diupdate", "Sukses", JOptionPane.INFORMATION_MESSAGE);
