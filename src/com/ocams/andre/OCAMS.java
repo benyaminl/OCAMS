@@ -12,7 +12,7 @@ public class OCAMS {
     public static SQLcommand SQL;
     public static User userYangLogin;
     public static void main(String[] args) {
-        String user = "root", pass = "", db = "ref", server = "localhost";
+        String user = "root", pass = "", db = "ocams", server = "localhost";
         SQL = new SQLcommand(user, pass, db, server);
         //new MasterMenu().setVisible(true);
         //new MasterJurnal().setVisible(true);
@@ -22,7 +22,7 @@ public class OCAMS {
         //new MasterAbsensi().setVisible(true);
     }
     public static Connection setKoneksi() {
-        String konString = "jdbc:mysql://localhost:3306/ref";
+        String konString = "jdbc:mysql://localhost:3306/ocams";
         Connection koneksi = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
