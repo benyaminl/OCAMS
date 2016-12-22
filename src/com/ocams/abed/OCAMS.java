@@ -17,8 +17,9 @@ public class OCAMS {
     public static User userYangLogin;
     
     public static void main(String[] args) {
-        String user = "root", pass = "", db = "ocams", server = "localhost";
+        String user = "root", pass = "", db = "datauser", server = "localhost";
         SQL = new SQLcommand(user, pass, db, server);
-        new FrameMasterUser().setVisible(true);
+        //new FrameMasterUser().setVisible(true);
+        new FrameLoginUser().setVisible(true);
     }
 }

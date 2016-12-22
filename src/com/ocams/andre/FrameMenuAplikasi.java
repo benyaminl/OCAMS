@@ -2,11 +2,13 @@ package com.ocams.andre;
 
 import com.ocams.abed.UAdmin;
 import com.ocams.OCAMS;
+import com.ocams.abed.FrameHutang;
 import com.ocams.abed.FrameMasterUser;
 import com.ocams.abed.UManager;
 import com.ocams.benyamin.FormHeaderKasir;
 import com.ocams.benyamin.MasterBahan;
 import com.ocams.benyamin.MasterMenu;
+import com.ocams.felix.HeaderStock;
 
 public class FrameMenuAplikasi extends javax.swing.JFrame {
     public FrameMenuAplikasi() {
@@ -67,6 +69,11 @@ public class FrameMenuAplikasi extends javax.swing.JFrame {
         jLabel2.setText("User:");
 
         jButton5.setText("Logout");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         btnKasir.setText("Kasir");
         btnKasir.addActionListener(new java.awt.event.ActionListener() {
@@ -104,11 +111,6 @@ public class FrameMenuAplikasi extends javax.swing.JFrame {
         });
 
         btnBahan.setText("Bahan");
-        btnBahan.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnBahanMouseClicked(evt);
-            }
-        });
         btnBahan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBahanActionPerformed(evt);
@@ -209,24 +211,20 @@ public class FrameMenuAplikasi extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuMouseClicked
 
     private void btnStockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnStockMouseClicked
-        
+        new HeaderStock().setVisible(true);
     }//GEN-LAST:event_btnStockMouseClicked
 
     private void btnHutangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHutangMouseClicked
-        
+        new FrameHutang().setVisible(true);
     }//GEN-LAST:event_btnHutangMouseClicked
 
     private void btnAsetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAsetMouseClicked
-        
+        new FrameHutang().setVisible(true);
     }//GEN-LAST:event_btnAsetMouseClicked
 
     private void btnUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUserMouseClicked
         new FrameMasterUser().setVisible(true);
     }//GEN-LAST:event_btnUserMouseClicked
-
-    private void btnBahanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBahanMouseClicked
-        
-    }//GEN-LAST:event_btnBahanMouseClicked
 
     private void btnKasirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKasirActionPerformed
         new FormHeaderKasir().setVisible(true);
@@ -251,6 +249,10 @@ public class FrameMenuAplikasi extends javax.swing.JFrame {
     private void btnBahanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBahanActionPerformed
         new MasterBahan().setVisible(true);
     }//GEN-LAST:event_btnBahanActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton5ActionPerformed
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

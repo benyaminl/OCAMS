@@ -174,16 +174,16 @@ public class SQLcommand {
      */
     // String data[] = {"Aset,2000,0","HUTANG,0,2000"};
     public void pencatatanJurnalTransaksi(String kode,String keterangan,String perkiraan[], String kodeUser){
-        String sql = "INSERT INTO HEADER_Jual VALUES('"+kode+"',CURRENT_DATE,'"
-                +LocalTime.now().getHour()+LocalTime.now().getMinute()+"','"
+        String sql = "INSERT INTO HEADER_jurnal VALUES('"+kode+"',CURRENT_DATE,DATE_FORMAT(CURRENT_TIME,'%H%i'),'"
                 +keterangan+"','"+kodeUser+"')"
-                + "On Duplicate primary key UPDATE";
+                + "On Duplicate key UPDATE id_trans = id_trans";
         executeNonQuery(sql);
         for(String d: perkiraan){
             String temp[] = d.split(",");
             String kodePerkiraan = executeGetScalar("Select nomor from noref where ucase(nama) like ucase('%"+ temp[0] +"%')");
             temp[0] = kodePerkiraan;
-            sql = "INSERT INTO jurnal VALUES('"+kode+"',"+temp[0]+","+temp[1]+","+temp[2]+")";
+            sql = "INSERT INTO jurnal VALUES('"+kode+"',"+temp[0]+","+temp[1]+","+temp[2]+")"
+                    + " on duplicate key update debit = values(debit), kredit = values(kredit)";
             executeNonQuery(sql);
         }
     }

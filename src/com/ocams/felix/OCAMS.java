@@ -22,7 +22,7 @@ public class OCAMS {
         String user = "root", pass = "", db = "test", server = "localhost";
         SQL = new SQLcommand(user, pass, db, server);
         
-        JFrame f = new headerstock();
+        JFrame f = new HeaderStock();
     f.setVisible(true);
     }
     
