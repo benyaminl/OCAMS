@@ -7,7 +7,7 @@ public class MasterMenu extends javax.swing.JFrame {
         initComponents();
     }
     public static void selectData(String SQL) {
-        String kolom[] = {"Kode","Nama Menu","Kategori","Harga"}; //kolom untuk jTable yang ada di form
+        String kolom[] = {"Kode","Nama Menu","Kategori"}; //kolom untuk jTable yang ada di form
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
         String SQL2 = SQL;
         ArrayList<String[]> data = com.ocams.andre.OCAMS.SQL.executeQueryGetArray(SQL);
@@ -30,12 +30,10 @@ public class MasterMenu extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
-        jSpinner1 = new javax.swing.JSpinner();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -56,8 +54,6 @@ public class MasterMenu extends javax.swing.JFrame {
         jLabel3.setText("Nama:");
 
         jLabel4.setText("Kategori:");
-
-        jLabel5.setText("Harga:");
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setText("Makanan");
@@ -153,17 +149,11 @@ public class MasterMenu extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jButton6))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                .addComponent(jLabel5)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jSpinner1))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                .addComponent(jLabel4)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jRadioButton1)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jRadioButton2)))
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jRadioButton1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jRadioButton2)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jCheckBox1)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
@@ -193,12 +183,8 @@ public class MasterMenu extends javax.swing.JFrame {
                             .addComponent(jLabel4)
                             .addComponent(jRadioButton1)
                             .addComponent(jRadioButton2)
-                            .addComponent(jCheckBox1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jCheckBox1))))
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
@@ -220,8 +206,7 @@ public class MasterMenu extends javax.swing.JFrame {
         }else if (jRadioButton2.isSelected()){
             kategori = "Minuman";
         }
-        int harga = Integer.parseInt(String.valueOf(jSpinner1.getValue()));
-        String SQL = "INSERT INTO `menu`(`kode`, `nama`, `kategori`, `harga`) VALUES ('" + kode + "','" + nama + "','" + kategori + "'," + harga + ")";
+        String SQL = "INSERT INTO `menu`(`kode`, `nama`, `kategori`) VALUES ('" + kode + "','" + nama + "','" + kategori + "')";
         int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -241,7 +226,6 @@ public class MasterMenu extends javax.swing.JFrame {
         }else if("minuman".equalsIgnoreCase(kategori)){
             jRadioButton2.setSelected(false);
         }
-        jSpinner1.setValue(Integer.parseInt(String.valueOf(jTable1.getValueAt(baris, 3))));
     }//GEN-LAST:event_jTable1MouseClicked
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         int baris = jTable1.rowAtPoint(evt.getPoint());
@@ -253,8 +237,7 @@ public class MasterMenu extends javax.swing.JFrame {
         }else if (jRadioButton2.isSelected()){
             kategori = "Minuman";
         }
-        int harga = Integer.parseInt(String.valueOf(jSpinner1.getValue()));
-        String SQL = "UPDATE menu SET nama='" + nama + "',kategori='" + kategori + "',harga=" + harga + " WHERE kode='" + kode + "'";
+        String SQL = "UPDATE menu SET nama='" + nama + "',kategori='" + kategori + "' WHERE kode='" + kode + "'";
         int status = com.ocams.andre.OCAMS.SQL.executeNonQuery(SQL);
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Data berhasil diperbaharui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -287,7 +270,7 @@ public class MasterMenu extends javax.swing.JFrame {
         }else if (jCheckBox1.isSelected() == false){
             kategori = "";
         }
-        String SQL2 = "SELECT * FROM menu WHERE kode LIKE '%" + String.valueOf(jTextField2.getText()) + "%' AND nama LIKE '%" + String.valueOf(jTextField3.getText()) + "%' AND kategori LIKE '%" + kategori + "%' AND harga LIKE '%" + String.valueOf(jSpinner1.getValue()) + "%'";
+        String SQL2 = "SELECT * FROM menu WHERE kode LIKE '%" + String.valueOf(jTextField2.getText()) + "%' AND nama LIKE '%" + String.valueOf(jTextField3.getText()) + "%' AND kategori LIKE '%" + kategori + "%'";
         selectData(SQL2);
     }//GEN-LAST:event_jButton6MouseClicked
     /**
@@ -335,13 +318,11 @@ public class MasterMenu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner jSpinner1;
     private static javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;

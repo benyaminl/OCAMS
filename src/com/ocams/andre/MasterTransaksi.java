@@ -209,14 +209,14 @@ public class MasterTransaksi extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2MouseClicked
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         int baris = jTable1.getSelectedRow();
-         if (baris != -1) {
-            jTextField1.setText(jTable1.getValueAt(baris, 0).toString());
-            jTextField2.setText(jTable1.getValueAt(baris, 1).toString());
-            jTextField3.setText(jTable1.getValueAt(baris, 2).toString());
-            jTextField4.setText(jTable1.getValueAt(baris, 3).toString());
-            kodetrans = jTable1.getValueAt(baris, 0).toString();
-            new FrameDetailTransaksi().setVisible(true);
-        }
+        if (baris != -1) {
+           jTextField1.setText(jTable1.getValueAt(baris, 0).toString());
+           jTextField2.setText(jTable1.getValueAt(baris, 1).toString());
+           jTextField3.setText(jTable1.getValueAt(baris, 2).toString());
+           jTextField4.setText(jTable1.getValueAt(baris, 3).toString());
+           kodetrans = jTable1.getValueAt(baris, 0).toString();
+           new FrameDetailTransaksi().setVisible(true);
+       }
     }//GEN-LAST:event_jTable1MouseClicked
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         selectData();
